@@ -8,7 +8,7 @@ const Home = () => {
     <> <div className="flex flex-col min-h-screen">
     <header className="bg-blue-600 text-white shadow-lg">
           <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 className="text-2xl font-bold">AirQuality Map</h1>
+           <div class="flex whitespace-nowrap" ><span class="m-0 p-0 bg-white rounded-full"><img src="tranweb.png" class="w-16 h-16" /></span>&nbsp;&nbsp;&nbsp;&nbsp;<h1 className="text-4xl font-bold content-center">AirQuality Map</h1></div> 
             <nav className="space-x-4">
               <Link to="/" className="btn btn-primary">
                 <MapIcon className="inline-block w-5 h-5 mr-2" />
