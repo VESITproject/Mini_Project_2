@@ -1,3 +1,4 @@
+@import '@fontsource/roboto/300.css';
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -28,4 +29,107 @@
   .label {
     @apply block text-sm font-medium text-gray-700;
   }
+}
+/* General Layout Styling */
+.main-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100vw;
+  background-color: #09090b  !important;
+  height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  background-color: white;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+  transition: width 0.3s ease-in-out;
+  height: 100vh !important;
+}
+
+.sidebar .p-4 {
+  padding: 1rem;
+}
+
+.sidebar button {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.sidebar button:hover {
+  background-color: #f1f5f9;
+}
+
+
+/* Loading Message */
+.loading-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* Utility Classes */
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.flex {
+  display: flex;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.w-20 {
+  width: 5rem;
+}
+
+.w-80 {
+  width: 20rem;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.transition-all {
+  transition: all 0.3s ease-in-out;
+}
+
+
+
+/* Left */
+.left{
+  margin-top: 150px;
+  width: 35vw;
+  margin-left: 130px;
+}
+/* Map Container Styling */
+.right {
+  position: relative;
+  background-color: #091b2c;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.right .right div {
+  height: 100%;
+}
+
+
+.button_div{
+  margin-top: 20px;
+  margin-left: -15px;
+}
+.button_div button {
+  height: 7vh;
+  width: 13vw;
+  background: linear-gradient(92deg, #42a5f5 6%, #0d4d8d 80%);
+  /* Make text transparent and show gradient */
+  border: none; /* Optional: Removes default button border */
+  cursor: pointer; /* Optional: Adds pointer cursor on hover */
 }
