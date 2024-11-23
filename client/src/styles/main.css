@@ -36,13 +36,13 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100vw;
-  background-color: #09090b  !important;
+  background: linear-gradient(92deg, #09090b 6%, #1e1e33 80%);
   height: 100vh;
 }
 
 /* Sidebar Styling */
 .sidebar {
-  background-color: white;
+  /* background-color: white; */
   /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
   transition: width 0.3s ease-in-out;
   height: 100vh !important;
@@ -71,10 +71,10 @@
   color: #555;
 }
 
-/* Utility Classes */
+/* Utility Classes
 .bg-gray-100 {
   background-color: #f3f4f6;
-}
+} */
 
 .flex {
   display: flex;
@@ -111,7 +111,7 @@
 /* Map Container Styling */
 .right {
   position: relative;
-  background-color: #091b2c;
+  background: linear-gradient(92deg, #092d4a 8%, #156abf 80%);
   padding: 1rem;
   overflow: hidden;
 }
@@ -132,4 +132,8 @@
   /* Make text transparent and show gradient */
   border: none; /* Optional: Removes default button border */
   cursor: pointer; /* Optional: Adds pointer cursor on hover */
+}
+.footer{
+
+   background: linear-gradient(92deg, #09090b 6%, #1e1e33 80%);
 }

@@ -1,6 +1,6 @@
 import React from 'react';
-import Navbar from './Navbar'; // Navbar at the top
-import MainLayout from './MainLayout'; // Sidebar and Map with Table
+import Navbar from '../components/navbar'; // Navbar at the top
+import MainLayout from '../components/MainLayout'; // Sidebar and Map with Table
 
 const Home = () => {
   return (
@@ -16,7 +16,7 @@ const Home = () => {
       </div>
 
       {/* Footer at the bottom */}
-      <footer className="bg-gray-800 text-white py-4">
+      <footer className="footer bg-gray-800 text-white py-4">
         <div className="container mx-auto px-4 text-center">
           <p>&copy; 2023 AirQuality Map. All rights reserved.</p>
         </div>

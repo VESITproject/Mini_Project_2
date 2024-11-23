@@ -41,7 +41,7 @@ function Navbar() {
   return (
     <AppBar
       position="static"
-      sx={{ backgroundColor: "#09090b", borderBottom: "1px solid #1b1f24" }}
+      sx={{ background: "linear-gradient(92deg, #09090b 6%, #131320 80%)", borderBottom: "1px solid #1b1f24" }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>

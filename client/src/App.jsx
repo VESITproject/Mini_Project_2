@@ -1,14 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
+import Home from './Pages/Home';
 import About from './components/About';
-
+import LoginForm from './Pages/login';
+import RegisterForm from './Pages/register';
 
 function App() {
   return (
     <Router future={{ v7_startTransition: true ,  v7_relativeSplatPath: true }}>
       <Routes>
-        <Route path="/" element={<Home />} />  
+        <Route path="/" element={<LoginForm />} />  
+        <Route path="/register" element={<RegisterForm />} />  
+        <Route path="/home" element={<Home />} />  
         <Route path="/about" element={<About />} />{/* Using element={ <About /> } */}
       </Routes>
     </Router>
