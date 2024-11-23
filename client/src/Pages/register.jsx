@@ -105,7 +105,7 @@ const RegisterForm = () => {
             <button type="submit" disabled={loading}>
               {loading ? 'Registering...' : 'Register'}
             </button>
-          <a href="/">Already have a account</a>
+          <a className="text-decoration-none text-white"href="/">Already have a account</a>
           </form>
         </div>
       </div>

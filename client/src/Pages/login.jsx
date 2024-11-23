@@ -97,7 +97,7 @@ const LoginForm = () => {
             <button type="submit" disabled={loading}>
               {loading ? 'Logging in...' : 'Login'}
             </button>
-            <a href="/register">Create a New Account</a>
+            <a className="text-white text-decoration-none"href="/register">Create a New Account</a>
           </form>
         </div>
       </div>
