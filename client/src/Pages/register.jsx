@@ -23,7 +23,7 @@ const RegisterForm = () => {
     setError('');
   
     try {
-      const response = await fetch(`${BASE_URL}`, {
+      const response = await fetch(`${BASE_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,23 +34,19 @@ const RegisterForm = () => {
           password: formData.password,
         })
       });
-      const data = await response.json();
-  
-      if (response.ok) {
-        // Check if token is present in the response data
+      const data = response.ok ? await response.json() : null;
+      if (response.ok && data) {
         if (data.token) {
-          // Store token in localStorage upon successful registration
           localStorage.setItem('token', data.token);
           alert("Registration Successful");
-          // Redirect to login page
           window.location.href = '/';
         } else {
           throw new Error('Token missing in response data');
         }
       } else {
-        // Handle registration failure
-        setError(data.message || 'Registration failed');
+        setError(data?.message || 'Registration failed');
       }
+      
     } catch (error) {
       console.error('Error:', error);
       setError('An error occurred. Please try again later.');

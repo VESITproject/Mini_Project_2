@@ -18,10 +18,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
-    imagePath: {
-        type: String,
-        required: false
-    }
+    // imagePath: {
+    //     type: String,
+    //     required: false
+    // }
     
 });
 

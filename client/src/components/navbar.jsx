@@ -1,4 +1,5 @@
-import * as React from "react";
+import * as React  from "react";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,9 +12,10 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { green } from "@mui/material/colors";
+
 import Logo from "/Images/favi.png"; // Ensure path is correct
-import { MoveRight } from "lucide-react";
+
+import { useState  , useEffect} from "react";
 
 const pages = ["Maps", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -21,6 +23,13 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [userData, setUserData] = useState({
+    firstName: "",
+    email: "",
+   // Initialize courses as an empty array
+  });
+
+  
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -38,6 +47,23 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
+  useEffect(() => {
+    // Fetch user data from the API
+    const fetchUserData = async () => {
+      try {
+        const userId = "64abcd1234ef567890"; // Replace with actual user ID or fetch dynamically
+        const response = await axios.get(`/api/user/${userId}`);
+        const fullName = response.data.name;
+        // Extract first name
+        const firstName = fullName.split(" ")[0];
+        setUserData({ firstName, email: response.data.email });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
   return (
     <AppBar
       position="static"
@@ -47,6 +73,7 @@ function Navbar() {
         <Toolbar disableGutters>
           {/* Logo */}
           <Avatar
+    
             alt="Logo"
             src={Logo} // Ensure the logo is displayed
             variant="rounded"
@@ -155,7 +182,7 @@ function Navbar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
+              <Avatar>{userData.firstName[0]}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
