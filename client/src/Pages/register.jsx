@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../Styles/pages.css';
 import signUpImg from "/Images/air_2.jpg";
 import { BASE_URL } from '../services/helper';
+import Alert from '@mui/material/Alert'; // Import Material-UI Alert component
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,23 @@ const RegisterForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    // Clear error message after 3 seconds
+    if (error) {
+      const timer = setTimeout(() => setError(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    // Clear success message after 3 seconds
+    if (success) {
+      const timer = setTimeout(() => setSuccess(''), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +39,7 @@ const RegisterForm = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
   
     try {
       const response = await fetch(`${BASE_URL}/register`, {
@@ -38,10 +57,12 @@ const RegisterForm = () => {
       if (response.ok && data) {
         if (data.token) {
           localStorage.setItem('token', data.token);
-          alert("Registration Successful");
-          window.location.href = '/';
+          setSuccess('Registration successful! Redirecting...');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 3000);
         } else {
-          throw new Error('Token missing in response data');
+          setError('Token missing in response data');
         }
       } else {
         setError(data?.message || 'Registration failed');
@@ -63,7 +84,16 @@ const RegisterForm = () => {
         </div>
         <div className="form-container">
           <h2>Register</h2>
-          {error && <p className="error">{error}</p>}
+          {error && (
+            <Alert severity="error" style={{ marginBottom: '10px' }}>
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert severity="success" style={{ marginBottom: '10px' }}>
+              {success}
+            </Alert>
+          )}
           <form onSubmit={registerUser}>
             <div className="form-group">
               <label htmlFor="name">Name:</label>
@@ -101,7 +131,9 @@ const RegisterForm = () => {
             <button type="submit" disabled={loading}>
               {loading ? 'Registering...' : 'Register'}
             </button>
-          <a className="text-decoration-none text-white"href="/">Already have a account</a>
+            <a className="text-decoration-none text-white" href="/">
+              Already have an account
+            </a>
           </form>
         </div>
       </div>

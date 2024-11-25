@@ -1,4 +1,7 @@
-import * as React  from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { BASE_URL } from "../services/helper";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -12,24 +15,20 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-
 import Logo from "/Images/favi.png"; // Ensure path is correct
-
-import { useState  , useEffect} from "react";
+// import { BASE_URL } from "../services/helper";
 
 const pages = ["Maps", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Navbar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const [userData, setUserData] = useState({
-    firstName: "",
+    name: "",
     email: "",
-   // Initialize courses as an empty array
   });
-
-  
+  const { id } = useParams();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -46,41 +45,67 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
   useEffect(() => {
-    // Fetch user data from the API
+    console.log("Logged in user:", userData.name); // Logs user name once it is updated
+  }, [userData]);
+
+  // Fetch user data
+  useEffect(() => {
     const fetchUserData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/"; // Redirect if no token
+        return;
+      }
+
       try {
-        const userId = "64abcd1234ef567890"; // Replace with actual user ID or fetch dynamically
-        const response = await axios.get(`/api/user/${userId}`);
-        const fullName = response.data.name;
-        // Extract first name
-        const firstName = fullName.split(" ")[0];
-        setUserData({ firstName, email: response.data.email });
+        const response = await axios.get(`${BASE_URL}/home/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setUserData(response.data.user); // Update userData state with response data
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
+        window.location.href = "/"; // Redirect if error occurs
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [id]);
+
+  // Fetch user data when the component mounts
+
+  // Re-runs when userData is updated
+
+  const handleLogout = () => {
+    // Remove token and user data from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // Reset the user data state
+    setUserData({ name: "", email: "" });
+
+    // Redirect the user to the login page
+    window.location.href = "/"; // Changed from window.location("/")
+  };
+
   return (
     <AppBar
       position="static"
-      sx={{ background: "linear-gradient(92deg, #09090b 6%, #131320 80%)", borderBottom: "1px solid #1b1f24" }}
+      sx={{
+        background: "linear-gradient(92deg, #09090b 6%, #131320 80%)",
+        borderBottom: "1px solid #1b1f24",
+      }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* Logo */}
-          <Avatar
-    
-            alt="Logo"
-            src={Logo} // Ensure the logo is displayed
-            variant="rounded"
-            sx={{ mr: 2 }}
-          />
+          <Avatar alt="Logo" src={Logo} variant="rounded" sx={{ mr: 2 }} />
 
-          {/* Brand Name */}
           <Typography
             variant="h6"
             noWrap
@@ -99,7 +124,6 @@ function Navbar() {
             Air Vision
           </Typography>
 
-          {/* Mobile Menu Icon */}
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -128,25 +152,13 @@ function Navbar() {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    position: "relative",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography sx={{ textAlign: "center", color: "inherit" }}>
-                    {page}
-                  </Typography>
+                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
-          {/* Brand Name in Mobile View */}
           <Typography
             variant="h6"
             noWrap
@@ -165,26 +177,34 @@ function Navbar() {
             Air Vision
           </Typography>
 
-          {/* Desktop Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', alignItems: 'center' }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, mx:2, color: "white", display: "block" }}
+                sx={{ my: 2, mx: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
             ))}
           </Box>
 
-          {/* User Settings */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar>{userData.firstName[0]}</Avatar>
+                <Avatar sx={{ backgroundColor: "#156abf" }}>
+                  {userData.name[0] || "U"}
+                </Avatar>
               </IconButton>
             </Tooltip>
+
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
@@ -202,7 +222,12 @@ function Navbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={
+                    setting === "Logout" ? handleLogout : handleCloseUserMenu
+                  }
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

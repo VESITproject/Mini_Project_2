@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         required: false
     },
+    lastLogin: { type: Date, default: null }
     // imagePath: {
     //     type: String,
     //     required: false
