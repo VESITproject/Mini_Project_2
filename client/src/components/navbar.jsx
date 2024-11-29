@@ -45,9 +45,6 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  useEffect(() => {
-    console.log("Logged in user:", userData.name); // Logs user name once it is updated
-  }, [userData]);
 
   // Fetch user data
   useEffect(() => {
@@ -110,7 +107,7 @@ function Navbar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href="/home"
             sx={{
               display: { xs: "none", md: "flex" },
               fontFamily: "monospace",
@@ -188,7 +185,14 @@ function Navbar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => {
+                  const routes = {
+                    Maps: "/",
+                    About: "/about", // Example route for "About"
+                    Contact: "/contact", // Example route for "Contact"
+                  };
+                  window.location.href = routes[page] || "/"; // Default to "/" if route not found
+                }}
                 sx={{ my: 2, mx: 2, color: "white", display: "block" }}
               >
                 {page}

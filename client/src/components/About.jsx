@@ -1,8 +1,11 @@
 import React from 'react';
-
+import Navbar from './navbar';
 function About() {
   return (
-    <div className="container mx-auto px-4 py-8">
+   <div>
+     <Navbar />
+    <div className="container mb-10 px-4 py-8">
+     
       <h1 className="text-3xl font-bold mb-6">About AirQuality Map</h1>
       <div className="card">
         <p className="mb-4">
@@ -24,6 +27,7 @@ function About() {
         </p>
       </div>
     </div>
+   </div>
   );
 }
 

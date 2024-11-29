@@ -1,4 +1,3 @@
-// src/components/MapComponent.js
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -6,7 +5,7 @@ import L from 'leaflet';
 import { fetchAirPollutionData } from '../services/pollutionService';
 import '../Styles/map.css'; // Import your custom CSS for styling
 import BasicTable from "../components/table";
-
+import { ImageOverlay } from 'react-leaflet';
 // Import custom marker icons
 import goodIcon from '/Images/marker.png';
 import moderateIcon from '/Images/marker.png';
@@ -52,15 +51,28 @@ const MapComponent = () => {
     getAirQualityData();
   }, []);
 
+  // Log map container to the console
+  useEffect(() => {
+    console.log('Map container rendering:', defaultPosition);
+  }, [defaultPosition]);
+
   return (
     <div className="map-container">
       {loading ? (
-        <div className=" fs-5 fw-bold text-customBlue">Loading air quality data...</div>
+        <div className="fs-5 fw-bold text-customBlue">Loading air quality data...</div>
       ) : (
         <>
-          <MapContainer center={defaultPosition} zoom={12} style={{ height: '500px', width: '100%' }}>
+          <MapContainer
+            center={defaultPosition}
+            zoom={12}
+            style={{ height: '500px', width: '100%' }}
+            whenCreated={(mapInstance) => {
+              console.log('Map instance created:', mapInstance);
+            }}
+          >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              // url={mapImg}
               attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
             />
             {station && (
