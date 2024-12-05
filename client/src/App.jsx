@@ -5,7 +5,6 @@ import About from './components/About';
 import LoginForm from './Pages/login';
 import RegisterForm from './Pages/register';
 import Map from './components/Map';
-
 function App() {
   return (
     <Router future={{ v7_startTransition: true ,  v7_relativeSplatPath: true }}>
@@ -15,6 +14,7 @@ function App() {
         <Route path="/home" element={<Home />} />  
         <Route path="/about" element={<About />} />{/* Using element={ <About /> } */}
         <Route path="/maps" element={<Map />} />{/* Using element={ <About /> } */}
+       
       </Routes>
     </Router>
   );
