@@ -187,7 +187,7 @@ function Navbar() {
                 key={page}
                 onClick={() => {
                   const routes = {
-                    Maps: "/",
+                    Maps: "/maps",
                     About: "/about", // Example route for "About"
                     Contact: "/contact", // Example route for "Contact"
                   };

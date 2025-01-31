@@ -4,6 +4,7 @@ import MainLayout from '../components/MainLayout';
 import { useParams } from "react-router-dom";
 import { BASE_URL } from '../services/helper';
 import axios from 'axios';
+import Footer from '../components/footer';
 
 const Home = () => {
   const { id } = useParams(); // Assuming the URL is something like /home/:id
@@ -67,11 +68,12 @@ const Home = () => {
       </div>
 
       {/* Footer at the bottom */}
-      <footer className="footer bg-gray-800 text-white py-4">
+      {/* <footer className="footer bg-gray-800 text-white py-4">
         <div className="container mx-auto px-4 text-center">
           <p>&copy; 2023 AirQuality Map. All rights reserved.</p>
         </div>
-      </footer>
+      </footer> */}
+      <Footer></Footer>
     </div>
   );
 };
