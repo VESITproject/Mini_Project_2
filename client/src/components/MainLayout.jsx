@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import AirIcon from '@mui/icons-material/Air';// Import the Sidebar component
 import MapComponent from './MapComponent'; // Import the Map component
 import { Typography , Button } from '@mui/material';
@@ -11,7 +12,7 @@ function MainLayout() {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-
+  const navigate = useNavigate();
   return (
     <div className="main-layout flex h-screen bg-gray-100">
       {/* Sidebar Section */}
@@ -56,12 +57,12 @@ function MainLayout() {
               </Button>
               
               <Button
-                variant="contained"
-                color="primary"
-                className='m-3'
-                // onClick={() => setActiveTab("trends")}
-                startIcon={<TrendingUpIcon />}
-              >
+      variant="contained"
+      color="primary"
+      className="m-3"
+      onClick={() => navigate("/dashboard")} // Navigate to /dashboard
+      startIcon={<TrendingUpIcon />}
+    >
                 Trends
               </Button>
     </div>

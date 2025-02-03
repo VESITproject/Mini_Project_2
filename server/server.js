@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
-const UserModel = require("./models/auth-model");
+const UserModel = require("./models/user");
 const path = require('path');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const connectDB = require("./utils/db");
 const cors = require("cors");
+const aqiRoutes = require("./routes/aqiRoutes")
+const predictionRoutes = require("./routes/predictionRoutes")
 const PORT = 5001;
 // const upload = require("../controller/crud-cont");
 
@@ -155,3 +157,6 @@ connectDB().then(() => {
         console.log(`Server is running on ${PORT}`);
     });
 });
+
+app.use('/api/aqi', aqiRoutes);
+app.use('/predict', predictionRoutes);

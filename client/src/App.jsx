@@ -4,6 +4,7 @@ import Home from './Pages/Home';
 import About from './components/About';
 import LoginForm from './Pages/login';
 import RegisterForm from './Pages/register';
+import Dashboard from './Pages/Dashboard';
 import Map from './components/Map';
 function App() {
   return (
@@ -13,8 +14,9 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />  
         <Route path="/home" element={<Home />} />  
         <Route path="/about" element={<About />} />{/* Using element={ <About /> } */}
+        
         <Route path="/maps" element={<Map />} />{/* Using element={ <About /> } */}
-       
+        <Route path="/dashboard" element={<Dashboard />} />  
       </Routes>
     </Router>
   );
