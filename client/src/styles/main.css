@@ -133,7 +133,18 @@
   border: none; /* Optional: Removes default button border */
   cursor: pointer; /* Optional: Adds pointer cursor on hover */
 }
-.footer{
 
-   background: linear-gradient(92deg, #09090b 6%, #1e1e33 80%);
+
+.footer-hr {
+  width: 60px;
+background: linear-gradient(92deg, #09090b 6%, #1e1e33 80%) !important;
+  height: 2px;
+}
+
+.footer-container a {
+  text-decoration: none;
+}
+
+.footer-container a:hover {
+  text-decoration: underline;
 }

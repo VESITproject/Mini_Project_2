@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../Styles/pages.css';
-import signUpImg from "/Images/air_2.jpg";
+import signUpImg from "/Images/sign.png";
 import { BASE_URL } from '../services/helper';
 import Alert from '@mui/material/Alert'; // Import Material-UI Alert component
 

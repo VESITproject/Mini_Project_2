@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import loginImg from "/Images/air_2.jpg";
+import loginImg from "/Images/login.png";
 import '../Styles/pages.css';
 import { BASE_URL } from '../services/helper';
 import { Alert, AlertTitle } from '@mui/material';

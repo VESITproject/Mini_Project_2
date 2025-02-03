@@ -27,8 +27,8 @@ export default function BasicTable({ stationData }) {
         <TableHead>
           <TableRow>
             <TableCell>City</TableCell>
-            <TableCell align="right">Air Quality Index (AQI)</TableCell>
-            <TableCell align="right">Main Pollutant</TableCell>
+            <TableCell align="center">Air Quality Index (AQI)</TableCell>
+            <TableCell align="center">Main Pollutant</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -36,8 +36,8 @@ export default function BasicTable({ stationData }) {
             <TableCell component="th" scope="row">
               {row.city}
             </TableCell>
-            <TableCell align="right">{row.aqi}</TableCell>
-            <TableCell align="right">{row.pollutant}</TableCell>
+            <TableCell align="center">{row.aqi}</TableCell>
+            <TableCell align="center">{row.pollutant}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
