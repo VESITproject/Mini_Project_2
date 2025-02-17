@@ -2,18 +2,18 @@ import express from "express";
 import { registerUser, loginUser, homeRoute } from "../controller/auth_cont.js";
 import axios from "axios";
 
-const router = express.Router();
+const authRoute = express.Router();
 const API_KEY = "c8c6c21e-7643-46dd-bc5f-036444b98806";
 
 // Get user profile by ID
-router.post("/register", registerUser);
+authRoute.post("/register", registerUser);
 
 // Update user profile
-router.post("/", loginUser);
+authRoute.post("/", loginUser);
 
-router.get("/home/:id", homeRoute);
+authRoute.get("/home/:id", homeRoute);
 
-router.get("/air-quality", async (req, res) => {
+authRoute.get("/air-quality", async (req, res) => {
     try {
         let { city } = req.query;
 
@@ -51,4 +51,4 @@ router.get("/air-quality", async (req, res) => {
     }
 });
 
-export default router;
+export default authRoute;

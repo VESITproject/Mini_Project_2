@@ -1,7 +1,7 @@
-const axios = require('axios');
+import axios from 'axios';
 
 // Function to fetch latitude and longitude using OpenStreetMap's Nominatim API
-async function getCoordinatesFromOSM(location) {
+export async function getCoordinatesFromOSM(location) {
   const endpoint = `https://nominatim.openstreetmap.org/search`;
 
   try {
@@ -31,21 +31,18 @@ async function getCoordinatesFromOSM(location) {
 // Example usage
 getCoordinatesFromOSM('Mumbai');
 
-const unixToDateTime = (unixTimestamp) => {
+export const unixToDateTime = (unixTimestamp) => {
   const date = new Date(unixTimestamp * 1000);
   return date.toISOString().replace('T', ' ').split('.')[0]; // Format: "YYYY-MM-DD HH:mm:ss"
 };
-const getUnixRange = (durationInDays) => {
+
+export const getUnixRange = (durationInDays) => {
   const now = Math.floor(Date.now() / 1000); // Current timestamp in seconds
   const past = now - durationInDays * 24 * 60 * 60; // Subtract days in seconds
   return { start: past, end: now };
-}
+};
 
-
-
-
-
-const processPredictionOutput = (output) => {
+export const processPredictionOutput = (output) => {
   const headers = ['CO', 'NO', 'NO2', 'O3', 'SO2', 'PM2_5', 'PM10', 'NH3', 'AQI'];
 
   // Generate dates from today + 1 to today + 7
@@ -58,17 +55,13 @@ const processPredictionOutput = (output) => {
   }
 
   return output.map((row, index) => {
-    // Create an object where each header maps to its corresponding value from the row
     let rowData = {};
     headers.forEach((header, headerIndex) => {
       rowData[header] = row[headerIndex];
     });
-    
-    // Add the corresponding date from the range
+
     rowData["date"] = dateRange[index] || ""; // Assigning dates from the dateRange array
     
     return rowData;
   });
 };
-
-module.exports = { getCoordinatesFromOSM, unixToDateTime , getUnixRange,processPredictionOutput, };

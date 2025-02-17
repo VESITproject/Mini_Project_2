@@ -72,9 +72,11 @@
 //   };
   
 // module.exports = { getAQIData };
-const { fetchAQIHistoricalData } = require('../services.js/aqiServices');
-const { unixToDateTime } = require('../utils/aqi');
-const axios = require('axios');
+import { fetchAQIHistoricalData } from '../services/aqiServices.js';
+
+
+// import { unixToDateTime } from '../utils/aqi.js';
+// import axios from 'axios';
 
 const getAQIData = async (req, res) => {
     const { location, timeRange } = req.query;
@@ -87,10 +89,10 @@ const getAQIData = async (req, res) => {
 
     try {
         // Fetch AQI historical data
-        const aqiData = await fetchAQIHistoricalData(timeRange,{ location});
+        const aqiData = await fetchAQIHistoricalData(timeRange, { location });
 
         // Log fetched data for debugging
-        console.log( aqiData);
+        console.log(aqiData);
 
         res.json(aqiData);
         console.log("Data sent to frontend");
@@ -102,5 +104,4 @@ const getAQIData = async (req, res) => {
     }
 };
 
-module.exports = { getAQIData };
-
+export { getAQIData }; // Use export for ES module

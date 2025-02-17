@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import { fetchAirPollutionData } from "../services/pollutionService";
 import "../styles/base_ui.css";
-
+import { FilterIcon , TrendingUpIcon  } from "lucide-react";
 function MainLayout({ searchQuery, setSearchQuery }) {
   const [location, setLocation] = useState("");
   const [airQualityData, setAirQualityData] = useState(null);

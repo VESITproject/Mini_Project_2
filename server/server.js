@@ -1,13 +1,16 @@
-import express from"express";
+import express from "express";
+// import UserModel from "./models/user.js";
+// import path from "path";
+// import bcrypt from "bcrypt";
+// import jwt from "jsonwebtoken";
+import connectDB from "./utils/db.js";
+import cors from "cors";
+import aqiRoutes from "./routes/aqiRoutes.js";
+import authRoute from "./routes/auth_routes.js";
 const app = express();
-const UserModel = require("./models/user");
-const path = require('path');
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const connectDB = require("./utils/db");
-const cors = require("cors");
-const aqiRoutes = require("./routes/aqiRoutes")
-const predictionRoutes = require("./routes/predictionRoutes")
+import predictRouter from "./routes/predictionRoutes.js";
+// Your app setup continues here...
+
 const PORT = 5001;
 
 
@@ -20,7 +23,8 @@ app.use(cors({
 }));
 
 // Serve static files
-app.use("/", router);
+app.use("/", authRoute);;
+
 
 // Connect to the database and start the server
 connectDB().then(() => {
@@ -30,4 +34,4 @@ connectDB().then(() => {
 });
 
 app.use('/api/aqi', aqiRoutes);
-app.use('/predict', predictionRoutes);
+app.use('/predict', predictRouter);

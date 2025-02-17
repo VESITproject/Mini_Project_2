@@ -1,8 +1,9 @@
-const { fetchAQIHistoricalData } = require('../services.js/aqiServices');
-const { processPredictionOutput} = require('../utils/aqi')
-const { spawn } = require('child_process');
+import { fetchAQIHistoricalData } from '../services/aqiServices.js';
 
-const handlePrediction = async (req, res) => {
+import { processPredictionOutput } from "../utils/aqi.js";
+import { spawn } from 'child_process'; // Note: child_process is a built-in Node.js module and can still use require-like import syntax
+
+export const handlePrediction = async (req, res) => {
     const { location } = req.query || {};  // Safely destructuring with a fallback to an empty object
 
     // Validate location parameter
@@ -96,4 +97,4 @@ const handlePrediction = async (req, res) => {
     }
 };
 
-module.exports = { handlePrediction };
+// module.exports = { handlePrediction };

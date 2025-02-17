@@ -1,8 +1,7 @@
-const express = require('express');
-const {handlePrediction} = require('../controllers/predictionController')
-const router = express.Router();
+import express from 'express';
+import { handlePrediction } from '../controllers/predictionController.js'; // Add .js for ES modules
+const predictRouter = express.Router();
+export default predictRouter.get('/', handlePrediction);
 
-router.get('/', handlePrediction);
-
-module.exports = router;
+// module.exports = router;
 

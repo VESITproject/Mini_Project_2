@@ -1,9 +1,10 @@
 
-const axios = require('axios');
-const { getCoordinatesFromOSM, getUnixRange } = require('../utils/aqi');
+import axios from 'axios';
+import { getCoordinatesFromOSM, getUnixRange } from '../utils/aqi.js'; // Ensure to include .js extension if needed
+
 
 // Function to aggregate hourly data to daily data
-const aggregateToDailyData = (data, latitude, longitude) => {
+export const aggregateToDailyData = (data, latitude, longitude) => {
   const groupedData = {};
 
   data.forEach(item => {
@@ -58,7 +59,7 @@ const aggregateToDailyData = (data, latitude, longitude) => {
 };
 
 
-const fetchAQIHistoricalData = async (days , { location, latitude, longitude }) => {
+export const fetchAQIHistoricalData = async (days , { location, latitude, longitude }) => {
   try{
   let coordinates;
 
@@ -95,4 +96,4 @@ const fetchAQIHistoricalData = async (days , { location, latitude, longitude }) 
   }
 };
 
-module.exports = { fetchAQIHistoricalData };
+// module.exports = { fetchAQIHistoricalData };

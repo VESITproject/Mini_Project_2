@@ -1,7 +1,8 @@
-const express = require('express');
-const { getAQIData } = require('../controllers/aqiController');
+import express from 'express';
+import { getAQIData } from '../controllers/aqiController.js';
+
 const router = express.Router();
 
 router.get('/', getAQIData);
 
-module.exports = router;
+export default router;
