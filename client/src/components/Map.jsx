@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MapIcon, FilterIcon } from "lucide-react";
+import { FilterIcon } from "lucide-react";
 import Navbar from "./navbar";
 import MapComponent from "./mapComponent";
 import Footer from "./footer";
@@ -29,8 +29,8 @@ function Map() {
     e.preventDefault();
     setOpen(false);
 
-    const finalLat = latitude || "19.0760";
-    const finalLon = longitude || "72.8777";
+    const finalLat = latitude || "19.0760"; // Default to Mumbai coordinates
+    const finalLon = longitude || "72.8777"; 
     const finalCity = location || "Mumbai";
 
     setLatitude(finalLat);
@@ -45,10 +45,6 @@ function Map() {
       <div className="map-wrapper">
         <h2 className="map-title">Air Quality Map</h2>
 
-        {/* <div className="bg-gray-800 rounded-lg p-8 flex items-center justify-center">
-          <MapIcon className="w-24 h-24 text-gray-400 block m-auto" />
-        </div> */}
-
         <h1 className="mt-4 text-sm text-white text-center">
           Interactive map will be displayed here.
         </h1>
@@ -57,6 +53,7 @@ function Map() {
           Filters
         </Button>
 
+        {/* Filter Modal */}
         <Modal open={open} onClose={handleClose}>
           <Box className="filter-modal">
             <Typography className="filter-header">Filter Air Quality Data</Typography>
@@ -106,7 +103,7 @@ function Map() {
         </Modal>
 
         <div className="map-area">
-        <MapComponent latitude={latitude} longitude={longitude} location={location} pollutant={pollutant} />
+          <MapComponent latitude={latitude} longitude={longitude} location={location} pollutant={pollutant} />
         </div>
       </div>
       <Footer />

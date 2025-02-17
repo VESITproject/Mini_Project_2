@@ -1,8 +1,13 @@
 import express from"express";
 const app = express();
-import router from"./routes/auth_routes.js";
-import connectDB from"./utils/db.js";
-import cors from"cors";
+const UserModel = require("./models/user");
+const path = require('path');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const connectDB = require("./utils/db");
+const cors = require("cors");
+const aqiRoutes = require("./routes/aqiRoutes")
+const predictionRoutes = require("./routes/predictionRoutes")
 const PORT = 5001;
 
 
@@ -23,3 +28,6 @@ connectDB().then(() => {
         console.log(`Server is running on ${PORT}`);
     });
 });
+
+app.use('/api/aqi', aqiRoutes);
+app.use('/predict', predictionRoutes);

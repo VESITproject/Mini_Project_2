@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import About from './components/About';
 import LoginForm from './Pages/login';
 import RegisterForm from './Pages/register';
+import Dashboard from './Pages/Dashboard';
 import Map from './components/Map';
 import 'leaflet/dist/leaflet.css';
 
@@ -28,9 +29,14 @@ function App() {
         <Route path="/register" element={<RegisterForm />} />  
         <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path="/about" element={<About />} />{/* Using element={ <About /> } */}
+        
         <Route path="/maps" element={<Map />} />{/* Using element={ <About /> } */}
+<<<<<<< HEAD
+        <Route path="/dashboard" element={<Dashboard />} />  
+=======
         {/* <Route path="/mymap" element={<MyMap />} />Using element={ <About /> } */}
        
+>>>>>>> 844c80dddd6f170caa5e7411c97caf356c6b2cde
       </Routes>
     </Router>
   );

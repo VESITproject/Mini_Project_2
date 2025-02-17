@@ -2,20 +2,23 @@ import React, { useState, useEffect } from "react";
 import AirIcon from "@mui/icons-material/Air";
 import MapComponent from "./mapComponent";
 import { Typography, Button, Modal, Box, TextField, IconButton } from "@mui/material";
-import "../styles/base_ui.css";
-import { fetchAirPollutionData } from "../services/pollutionService";
+import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
+import { fetchAirPollutionData } from "../services/pollutionService";
+import "../styles/base_ui.css";
 
-function MainLayout({ searchQuery, setSearchQuery }) {  // Accept searchQuery and setSearchQuery as props
+function MainLayout({ searchQuery, setSearchQuery }) {
   const [location, setLocation] = useState("");
   const [airQualityData, setAirQualityData] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const navigate = useNavigate();
 
+  // Fetch data when searchQuery changes
   useEffect(() => {
     if (searchQuery) {
       handleFetchData(searchQuery);
     }
-  }, [searchQuery]); // Trigger fetch when searchQuery changes
+  }, [searchQuery]);
 
   const handleFetchData = async (city) => {
     if (!city || city.length < 3) {
@@ -35,9 +38,9 @@ function MainLayout({ searchQuery, setSearchQuery }) {  // Accept searchQuery an
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSearchQuery(location); // Update the searchQuery when the form is submitted
-    handleFetchData(location); // Fetch the data after submitting the form
-    setSearchOpen(false); // Close the modal after search
+    setSearchQuery(location); // Update searchQuery
+    handleFetchData(location); // Fetch data after search
+    setSearchOpen(false); // Close modal after search
   };
 
   return (
@@ -99,8 +102,31 @@ function MainLayout({ searchQuery, setSearchQuery }) {  // Accept searchQuery an
             </Box>
           </Modal>
         </div>
+
+        {/* Filter and Trend Buttons */}
+        <div className="button_div">
+          <Button
+            variant="contained"
+            color="primary"
+            className="m-3"
+            startIcon={<FilterIcon />}
+          >
+            Filters
+          </Button>
+          
+          <Button
+            variant="contained"
+            color="primary"
+            className="m-3"
+            onClick={() => navigate("/dashboard")}
+            startIcon={<TrendingUpIcon />}
+          >
+            Trends
+          </Button>
+        </div>
       </div>
 
+      {/* Map Section */}
       <div className="right">
         {airQualityData ? (
           <MapComponent data={airQualityData} />
