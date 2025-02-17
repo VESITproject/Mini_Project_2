@@ -1,8 +1,91 @@
+/* Map.css */
+/* MapStyles.css */
+.map-wrapper {
+  background: linear-gradient(92deg, #09090b 6%, #1e1e33 80%);
+  padding: 20px;
+  width: 100vw ;
+
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.map-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.filter-button {
+  background: linear-gradient(92deg, #092d4a 8%, #156abf 80%);
+
+  color: white !important;
+  font-weight: bold !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.map-area {
+  height: 500px;
+  width: 100vw;
+  border-radius: 8px;
+  /* overflow: hidden; */
+}
+
+.filter-modal {
+  background-color: #2d2d3d;
+  color: white !important;
+  padding: 25px;
+  border-radius: 10px;
+}
+
+.filter-header {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #ffcc00;
+}
+
+.input-box {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  background-color: #2e2e2e;
+  color: white;
+}
+
+.dropdown-select {
+  width: 100%;
+  background-color: #444;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.apply-filter-btn {
+  background-color: #43a047 !important;
+  color: white !important;
+  font-weight: bold !important;
+  padding: 12px;
+  border-radius: 8px !important;
+  margin-top: 12px !important;
+}
+
+.apply-filter-btn:hover {
+  background-color: #388e3c !important;
+}
+/* diff*/
+
 .map-container {
   position: relative;
   margin: 20px auto;
   /* max-width: 2000px; Set./ a maximum width for the map container */
-  width: 100%; /* Ensure the container takes up the full width */
+  width: 40vw; /* Ensure the container takes up the full width */
   height: 500px; /* Explicit height for the map */
   border-radius: 10px; /* Rounded corners for aesthetics */
   overflow: hidden; /* Ensure corners are smooth */

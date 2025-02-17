@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from"mongoose";
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
     lastLogin: { type: Date, default: null }
     // imagePath: {
     //     type: String,
-    //     required: false
+    //     importd: false
     // }
     
 });
 
 const UserModel = mongoose.model('User', userSchema);
 
-module.exports = UserModel;
+export default  UserModel;

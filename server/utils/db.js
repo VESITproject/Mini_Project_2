@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from"mongoose"
     
 const connectDB =  async ()=>{
     mongoose.connect("mongodb+srv://airvision:airvision123@airvision.wgfho.mongodb.net/users?retryWrites=true&w=majority&appName=AirVision").then(()=>{
@@ -9,7 +9,7 @@ const connectDB =  async ()=>{
         process.exit(0)
       })
 }
-module.exports =  connectDB;
+export default   connectDB;
 
 
 
