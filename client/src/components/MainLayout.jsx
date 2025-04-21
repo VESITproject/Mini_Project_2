@@ -6,41 +6,62 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import { fetchAirPollutionData } from "../services/pollutionService";
 import "../styles/base_ui.css";
-import { FilterIcon , TrendingUpIcon  } from "lucide-react";
+import { FilterIcon, TrendingUpIcon } from "lucide-react";
+import PollutionVisualizer from "../components/PollutionVisualizer";
+
 function MainLayout({ searchQuery, setSearchQuery }) {
   const [location, setLocation] = useState("");
   const [airQualityData, setAirQualityData] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [loading, setLoading] = useState(false); // Added loading state
   const navigate = useNavigate();
 
-  // Fetch data when searchQuery changes
+  // Default location (Mumbai)
+  const defaultData = {
+    lat: 0,
+    lon: 0,
+    city: "Unknown",
+    aqi: "N/A",
+    pollutant: "N/A",
+  };
+  
+
   useEffect(() => {
-    if (searchQuery) {
+    if (searchQuery && !airQualityData) {
       handleFetchData(searchQuery);
     }
   }, [searchQuery]);
 
   const handleFetchData = async (city) => {
-    if (!city || city.length < 3) {
-      alert("Please enter a valid city name.");
+    if (!city || city.trim().length < 3) {
+      alert("Please enter a valid city name with at least 3 characters.");
       return;
     }
-
+  
+    const formattedCity = city.trim().replace(/\s+/g, "+"); // Convert spaces to '+'
+  
+    setLoading(true);
     try {
-      const data = await fetchAirPollutionData({ city });
-      if (data) {
-        setAirQualityData(data);
+      const data = await fetchAirPollutionData({ city: formattedCity });
+      if (data.error || data.city_not_found) {
+        throw new Error("City not found. Please enter a valid city.");
       }
+      setAirQualityData(data || defaultData);
     } catch (error) {
-      alert("Error fetching air pollution data.");
+      console.error("Fetch error:", error.message);
+      alert(error.message || "Error fetching air pollution data. Showing default data for Mumbai.");
+      setAirQualityData(defaultData);
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSearchQuery(location); // Update searchQuery
-    handleFetchData(location); // Fetch data after search
-    setSearchOpen(false); // Close modal after search
+    setSearchQuery(location.trim()); // Trim whitespace
+    setSearchOpen(false);
+    setLocation(""); // Clear input after submission
   };
 
   return (
@@ -65,7 +86,12 @@ function MainLayout({ searchQuery, setSearchQuery }) {
         </Typography>
 
         <div className="button_div">
-          <IconButton onClick={() => setSearchOpen(true)} color="inherit">
+          <IconButton 
+            id="search_icon" 
+            onClick={() => setSearchOpen(true)} 
+            color="inherit"
+            disabled={loading}
+          >
             <SearchIcon fontSize="medium" />
           </IconButton>
 
@@ -84,9 +110,7 @@ function MainLayout({ searchQuery, setSearchQuery }) {
                 borderRadius: "10px",
               }}
             >
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Enter Location
-              </Typography>
+              <Typography variant="h6" sx={{ mb: 2 }}>Enter Location</Typography>
               <form onSubmit={handleSubmit}>
                 <TextField
                   fullWidth
@@ -94,9 +118,17 @@ function MainLayout({ searchQuery, setSearchQuery }) {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   required
+                  disabled={loading}
                 />
-                <Button type="submit" variant="contained" color="primary" sx={{ mt: 3 }}>
-                  Search
+                <Button 
+                  type="submit" 
+                  fullWidth 
+                  variant="contained" 
+                  color="primary" 
+                  sx={{ mt: 3 }}
+                  disabled={loading}
+                >
+                  {loading ? "Searching..." : "Search"}
                 </Button>
               </form>
             </Box>
@@ -105,21 +137,13 @@ function MainLayout({ searchQuery, setSearchQuery }) {
 
         {/* Filter and Trend Buttons */}
         <div className="button_div">
-          <Button
-            variant="contained"
-            color="primary"
-            className="m-3"
-            startIcon={<FilterIcon />}
-          >
-            Filters
-          </Button>
-          
-          <Button
-            variant="contained"
-            color="primary"
-            className="m-3"
-            onClick={() => navigate("/dashboard")}
+          <Button 
+            variant="contained" 
+            className="m-3 p-3 w-50 text-center" 
+            color="primary" 
+            onClick={() => navigate("/dashboard")} 
             startIcon={<TrendingUpIcon />}
+            disabled={loading}
           >
             Trends
           </Button>
@@ -127,14 +151,16 @@ function MainLayout({ searchQuery, setSearchQuery }) {
       </div>
 
       {/* Map Section */}
-      <div className="right">
-        {airQualityData ? (
-          <MapComponent data={airQualityData} />
-        ) : (
-          <Typography sx={{ color: "white", fontSize: "16px", mt: 2 }}>
-            Please enter a city to view air quality data.
-          </Typography>
-        )}
+      <div className="right d-flex">
+        <MapComponent data={airQualityData || defaultData} />
+        <div className="bg-black border-r-emerald-50 m-3 rounded p-3">
+          <PollutionVisualizer data={airQualityData || defaultData} />
+          {loading && (
+            <Typography sx={{ color: "white", textAlign: "center" }}>
+              Loading...
+            </Typography>
+          )}
+        </div>
       </div>
     </div>
   );

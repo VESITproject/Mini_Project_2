@@ -6,7 +6,7 @@ import Footer from "./footer";
 import { Typography, Button, Modal, Box, Select, MenuItem } from "@mui/material";
 import "../styles/map.css"; // Updated class names
 
-function Map() {
+function Map({data}) {
   const pollutantOptions = {
     p2: "PM2.5",
     p1: "PM10",
@@ -103,7 +103,7 @@ function Map() {
         </Modal>
 
         <div className="map-area">
-          <MapComponent latitude={latitude} longitude={longitude} location={location} pollutant={pollutant} />
+          <MapComponent data={data} />
         </div>
       </div>
       <Footer />

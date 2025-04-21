@@ -32,6 +32,8 @@ function App() {
         
         <Route path="/maps" element={<Map />} />{/* Using element={ <About /> } */}
         <Route path="/dashboard" element={<Dashboard />} />  
+  
+     
         {/* <Route path="/mymap" element={<MyMap />} />Using element={ <About /> } */}
        
       </Routes>

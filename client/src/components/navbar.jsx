@@ -128,11 +128,26 @@ function Navbar() {
               </IconButton>
             </Tooltip>
             <Menu sx={{ mt: "45px" }} anchorEl={anchorElUser} open={Boolean(anchorElUser)} onClose={() => setAnchorElUser(null)}>
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={setting === "Logout" ? handleLogout : () => setAnchorElUser(null)}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+            {settings.map((setting) => {
+  const path = `/${setting.toLowerCase()}`; // e.g., /profile, /account
+
+  return (
+    <MenuItem
+      key={setting}
+      onClick={() => {
+        setAnchorElUser(null);
+        if (setting === "Logout") {
+          handleLogout();
+        } else {
+          window.location.href = path;
+        }
+      }}
+    >
+      <Typography textAlign="center">{setting}</Typography>
+    </MenuItem>
+  );
+})}
+
             </Menu>
           </Box>
         </Toolbar>

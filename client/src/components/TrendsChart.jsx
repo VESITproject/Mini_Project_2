@@ -208,7 +208,6 @@ const createCommonOptions = (title) => ({
   },
   animation: { duration: 2000, easing: "easeInOutQuart" },
 })
-
 const processData = (rawData, pollutant) => {
   if (!Array.isArray(rawData)) {
     console.error(`Invalid data structure for pollutant: ${pollutant}`, rawData)
@@ -218,16 +217,27 @@ const processData = (rawData, pollutant) => {
   return rawData
     .map((item) => {
       const date = new Date(item.date)
-      const value = Number.parseFloat(item[pollutant])
-      if (isNaN(date.getTime()) || isNaN(value)) {
+      let value = item[pollutant]
+
+      // If the value is an object, attempt to extract a numeric value
+      if (typeof value === 'object') {
+        console.warn(`Expected a numeric value for ${pollutant}, but got an object:`, value)
+        value = value.aqi || value.value || NaN  // Example structure, adjust as needed
+      }
+
+      const parsedValue = Number.parseFloat(value)
+
+      if (isNaN(date.getTime()) || isNaN(parsedValue)) {
         console.warn(`Invalid data point for ${pollutant}:`, item)
         return null
       }
-      return { x: date, y: value }
+
+      return { x: date, y: parsedValue }
     })
     .filter((item) => item !== null)
     .sort((a, b) => a.x - b.x)
 }
+
 
 const createChartData = (processedData, pollutant, chartType, colorIndex) => {
   const color = chartColors[colorIndex % chartColors.length]

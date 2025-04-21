@@ -5,6 +5,9 @@ module.exports = {
       colors: {
         customBlue: '#09090b', // Add your custom color here
       },
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+      },
     },
   },
   plugins: [],

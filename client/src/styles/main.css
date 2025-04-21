@@ -121,8 +121,10 @@
 }
 /* Map Container Styling */
 .right {
+  
+  margin-left: 20px;
   position: relative;
-  background: linear-gradient(92deg, #092d4a 8%, #156abf 80%);
+  background: linear-gradient(92deg, #156abf 8%, #092d4a 80%);
   padding: 1rem;
   overflow: hidden;
 }
@@ -136,10 +138,11 @@
   margin-top: 20px;
   margin-left: -15px;
 }
-.button_div button {
+.button_div #search_icon {
   position: absolute;
-   right:18%; 
+   right:19%; 
    top: 2.4%;
+
    color: #f1f5f9;
 }
 

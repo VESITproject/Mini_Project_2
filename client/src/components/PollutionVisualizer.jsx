@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react"
 import { Box, Typography, Paper } from "@mui/material"
 import { motion, AnimatePresence } from "framer-motion"
 
-export default function PollutionVisualizer({ data, selectedPollutants }) {
-  const [aqiLevel, setAqiLevel] = useState(150)
+export default function PollutionVisualizer({ data }) {
+  const [aqiLevel, setAqiLevel] = useState("")
 
   useEffect(() => {
     if (data && data.AQI && data.AQI.length > 0) {
@@ -30,7 +30,7 @@ export default function PollutionVisualizer({ data, selectedPollutants }) {
     return "Hazardous"
   }
 
-  const [baseColor, glowColor] = getAQIColor(aqiLevel)
+  const [baseColor, glowColor] = getAQIColor(aqiLevel)  
 
   return (
     <Box sx={{ height: "100%", position: "relative" }}>
@@ -158,6 +158,7 @@ export default function PollutionVisualizer({ data, selectedPollutants }) {
               mt: 2,
             }}
           >
+            
             Current AQI Level
           </Typography>
         </Box>
