@@ -27,6 +27,7 @@ import {
 } from "@mui/material"
 import ZoomInIcon from "@mui/icons-material/ZoomIn"
 import CloseIcon from "@mui/icons-material/Close"
+import { addQuarters } from "date-fns"
 
 
 
@@ -224,6 +225,7 @@ export default function Dashboard() {
         </Box>
       ) : (
         <PollutionVisualizer data={chartData} />
+        
       )}
     </Paper>
   </Grow>

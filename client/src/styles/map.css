@@ -1,128 +1,78 @@
-/* Map.css */
-/* MapStyles.css */
 .map-wrapper {
-  background: linear-gradient(92deg, #09090b 6%, #1e1e33 80%);
-  padding: 20px;
-  width: 100vw ;
-
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-}
+  padding: 40px 20px;
+  background: linear-gradient(to bottom, #004d74, #032030);
+  min-height: 100vh;
+  
+  }
 
 .map-title {
-  font-size: 1.8rem;
+  color: #ffffff;
+  font-size: 36px;
   font-weight: bold;
-  color: #fff;
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 30px;
 }
 
 .filter-button {
-  background: linear-gradient(92deg, #092d4a 8%, #156abf 80%);
-
-  color: white !important;
-  font-weight: bold !important;
-  padding: 10px 16px !important;
-  border-radius: 8px !important;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  background: #d5deef !important;
+  color: #032030 !important;
+  margin: 20px auto;
+  display: block;
+  padding: 12px 24px !important;
+  border-radius: 12px !important;
+  font-weight: bold;
+  transition: all 0.3s;
 }
 
-
-.map-area {
-  height: 500px;
-  width: 100vw;
-  border-radius: 8px;
-  /* overflow: hidden; */
+.filter-button:hover {
+  background: #ffffff !important;
+  color: #004d74 !important;
 }
 
 .filter-modal {
-  background-color: #2d2d3d;
-  color: white !important;
-  padding: 25px;
-  border-radius: 10px;
-}
-
-.filter-header {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #ffcc00;
-}
-
-.input-box {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 6px;
-  border: 1px solid #aaa;
-  background-color: #2e2e2e;
-  color: white;
-}
-
-.dropdown-select {
-  width: 100%;
-  background-color: #444;
-  color: white;
-  padding: 10px;
-  border-radius: 6px;
-}
-
-.apply-filter-btn {
-  background-color: #43a047 !important;
-  color: white !important;
-  font-weight: bold !important;
-  padding: 12px;
-  border-radius: 8px !important;
-  margin-top: 12px !important;
-}
-
-.apply-filter-btn:hover {
-  background-color: #388e3c !important;
-}
-/* diff*/
-
-.map-container {
-  position: relative;
-  margin: 20px auto;
-  /* max-width: 2000px; Set./ a maximum width for the map container */
-  width: 35vw; /* Ensure the container takes up the full width */
-  height: 400px; /* Explicit height for the map */
-  border-radius: 10px; /* Rounded corners for aesthetics */
-  overflow: hidden; /* Ensure corners are smooth */
-  background-color: #f0f0f0; /* Fallback background color */
-}
-
-.loading-message {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.5rem;
-  color: #fff;
-  background-color: 1e1e33; /* Semi-transparent background */
-  padding: 10px 20px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 20px;
+  width: 400px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.input-box {
+  width: 100% !important;
+  /* padding: 10px; */
+  margin: 10px 0;
   border-radius: 8px;
-  text-align: center;
+  border: 1px solid #ccc;
 }
 
-.popup {
-  background-color: #fff; /* White background for the popup */
-  border-radius: 5px; /* Rounded corners for the popup */
-  padding: 10px;
+.dropdown-select {
+  margin-top: 10px;
 }
 
-.popup strong {
-  color: #004d74; /* A color that matches your theme */
+.apply-filter-btn {
+  background-color: #004d74 !important;
+  color: white !important;
+  margin-top: 20px;
+  padding: 10px 0 !important;
+  border-radius: 8px !important;
+  font-weight: bold;
 }
 
-@media (max-width: 768px) {
-  .map-container {
-    width: 90%; /* Make the map container responsive */
-    height: 400px; /* Adjust height for smaller screens */
-  }
+.map-area {
+  width: 100%;
+  height: 70vh; /* or whatever you want */
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .loading-message {
-    font-size: 1.2rem; /* Adjust font size for smaller screens */
-    padding: 8px 16px;
-  }
+.leaflet-container {
+  width: 90%;
+  height: 100%;
+  border-radius: 20px;
 }

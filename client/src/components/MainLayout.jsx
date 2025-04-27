@@ -14,6 +14,7 @@ function MainLayout({ searchQuery, setSearchQuery }) {
   const [airQualityData, setAirQualityData] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [loading, setLoading] = useState(false); // Added loading state
+  const [error, setError] = useState(""); // Added error state
   const navigate = useNavigate();
 
   // Default location (Mumbai)
@@ -24,7 +25,6 @@ function MainLayout({ searchQuery, setSearchQuery }) {
     aqi: "N/A",
     pollutant: "N/A",
   };
-  
 
   useEffect(() => {
     if (searchQuery && !airQualityData) {
@@ -34,28 +34,31 @@ function MainLayout({ searchQuery, setSearchQuery }) {
 
   const handleFetchData = async (city) => {
     if (!city || city.trim().length < 3) {
-      alert("Please enter a valid city name with at least 3 characters.");
+      setError("Please enter a valid city name with at least 3 characters.");
       return;
     }
-  
+
     const formattedCity = city.trim().replace(/\s+/g, "+"); // Convert spaces to '+'
-  
+
     setLoading(true);
+    setError(""); // Reset the error state before making the API call
+
     try {
       const data = await fetchAirPollutionData({ city: formattedCity });
+      
       if (data.error || data.city_not_found) {
-        throw new Error("City not found. Please enter a valid city.");
+        throw new Error(data.error || "City not found. Please enter a valid city.");
       }
+      
       setAirQualityData(data || defaultData);
     } catch (error) {
       console.error("Fetch error:", error.message);
-      alert(error.message || "Error fetching air pollution data. Showing default data for Mumbai.");
+      setError(error.message || "Error fetching air pollution data. Showing default data.");
       setAirQualityData(defaultData);
     } finally {
       setLoading(false);
     }
   };
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -131,6 +134,7 @@ function MainLayout({ searchQuery, setSearchQuery }) {
                   {loading ? "Searching..." : "Search"}
                 </Button>
               </form>
+              {error && <Typography sx={{ color: "red", marginTop: 2 }}>{error}</Typography>}
             </Box>
           </Modal>
         </div>
