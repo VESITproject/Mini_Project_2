@@ -8,6 +8,7 @@ import RegisterForm from './Pages/register';
 import Dashboard from './Pages/Dashboard';
 import Map from './components/Map';
 import 'leaflet/dist/leaflet.css';
+import AirQualityMap from './Pages/AirQualityMap';
 
 // import MyMap from "./components/MyMap";
 function App() {
@@ -32,7 +33,7 @@ function App() {
         
         <Route path="/maps" element={<Map />} />{/* Using element={ <About /> } */}
         <Route path="/dashboard" element={<Dashboard />} />  
-  
+        <Route path="/air-maps" element={<AirQualityMap />} />{/* Using element={ <About /> } */}
      
         {/* <Route path="/mymap" element={<MyMap />} />Using element={ <About /> } */}
        

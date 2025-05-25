@@ -1,54 +1,58 @@
+// routes/authRoute.js
 import express from "express";
 import { registerUser, loginUser, homeRoute } from "../controller/auth_cont.js";
-import axios from "axios";
+// import axios from "axios";
+import dotenv from "dotenv";
+// import authenticateJWT from "../middleware/auth.js";  // Correct import for authenticateJWT
+// routes/airQualityRoute.js
+// import express from "express";
+import fetch from "node-fetch";
+// import dotenv from "dotenv";
+
+
+dotenv.config(); // Load environment variables
 
 const authRoute = express.Router();
-const API_KEY = "c8c6c21e-7643-46dd-bc5f-036444b98806";
 
-// Get user profile by ID
+// API keys
+// const OPENCAGE_API_KEY = "15c46155180c41e695d6da3e683b9625";
+// const AIRVISUAL_API_KEY = "ad07463a0d6095307a9e826970fdd56a";
+const OPENWEATHERMAP_API_KEY = "95a4a6cb3d4959918f44e4b88b2b0bf4";
+// Routes
 authRoute.post("/register", registerUser);
-
-// Update user profile
 authRoute.post("/", loginUser);
-
 authRoute.get("/home/:id", homeRoute);
 
-authRoute.get("/air-quality", async (req, res) => {
-    try {
-        let { city } = req.query;
 
-        if (!city || city.trim().length < 3) {
-            return res.status(400).json({ error: "Provide a valid city name with at least 3 characters." });
-        }
+authRoute.get("/air-quality/city", async (req, res) => {
+  const city = req.query.city;
 
-        console.log("Using city name, hitting city API...");
-        const state = "Maharashtra";
-        const country = "India";
-        const url = "https://api.airvisual.com/v2/city";
-        const params = { city, state, country, key: API_KEY };
+  if (!city) {
+    return res.status(400).json({ error: "City is required" });
+  }
 
-        console.log("Making request to:", url, params);
-        const response = await axios.get(url, { params });
+  try {
+    const geoRes = await fetch(
+      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${OPENWEATHERMAP_API_KEY}`
+    );
+    const geoData = await geoRes.json();
 
-        if (!response.data || response.data.status === "fail") {
-            return res.status(500).json({ error: response.data.data?.message || "API error" });
-        }
-
-        const data = response.data.data;
-        return res.json({
-            city: data.city,
-            lat: data.location.coordinates[1],
-            lon: data.location.coordinates[0],
-            aqi: data.current.pollution.aqius,
-            pollutant: data.current.pollution.mainus,
-        });
-    } catch (error) {
-        console.error("Backend error:", error.message);
-        if (error.response && error.response.status === 429) {
-            return res.status(429).json({ error: "API rate limit exceeded. Please try again later." });
-        }
-        return res.status(500).json({ error: "Server error" });
+    if (!geoData.length) {
+      return res.status(404).json({ error: "City not found" });
     }
+
+    const { lat, lon } = geoData[0];
+
+    const pollutionRes = await fetch(
+      `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${process.env.OPENWEATHERMAP_API_KEY}`
+    );
+    const pollutionData = await pollutionRes.json();
+
+    res.json(pollutionData);
+  } catch (error) {
+    console.error("❌ Error in air-quality/city:", error.message);
+    res.status(500).json({ error: "Failed to fetch air pollution data" });
+  }
 });
 
 export default authRoute;

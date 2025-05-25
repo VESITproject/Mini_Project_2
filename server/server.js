@@ -17,10 +17,12 @@ const PORT = 5001;
 // Middleware for parsing request body
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173',  // The frontend's URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allowed methods
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'],  // Allowed headers
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'],
+    credentials: true, // If you're using cookies or sessions
 }));
+
 
 // Serve static files
 app.use("/", authRoute);;

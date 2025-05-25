@@ -128,7 +128,10 @@
   padding: 1rem;
   overflow: hidden;
 }
+.right_bar{
+  height: 70vh !important;
 
+}
 .right .right div {
   height: 100%;
 }

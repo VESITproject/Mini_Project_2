@@ -103,4 +103,3 @@ export const homeRoute = async (req ,res)=>{
     }
 };
 
-// export default {registerUser , loginUser  , homeRoute};

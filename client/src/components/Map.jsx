@@ -1,17 +1,25 @@
-import React, { useState } from "react";
-import { FilterIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { FilterIcon, Thermometer, Wind, Sun } from "lucide-react";
 import Navbar from "./navbar";
 import MapComponent from "./mapComponent";
 import Footer from "./footer";
-import { Typography, Button, Modal, Box, Select, MenuItem } from "@mui/material";
-import { fetchAirPollutionData } from "../services/pollutionService"; 
-import { fetchWeatherData } from "../services/weatherService"; 
+import {
+  Typography,
+  Button,
+  Modal,
+  Box,
+  Select,
+  MenuItem,
+  TextField,
+} from "@mui/material";
+import { fetchAirPollutionDataByCity } from "../services/pollutionService";
+import { fetchWeatherData } from "../services/weatherService";
 import "../styles/map.css";
 
 function Map() {
   const pollutantOptions = {
-    p2: "PM2.5",
-    p1: "PM10",
+    pm2_5: "PM2.5",
+    pm10: "PM10",
     co: "CO",
     no2: "NO2",
     o3: "O3",
@@ -21,73 +29,92 @@ function Map() {
   const filterOptions = ["Air Quality", "Heat Map", "Wind Speed", "Climate"];
 
   const [open, setOpen] = useState(false);
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [location, setLocation] = useState("");
-  const [pollutant, setPollutant] = useState("");
+  const [location, setLocation] = useState("Mumbai");
+  const [pollutant, setPollutant] = useState("pm2_5");
   const [filterType, setFilterType] = useState("Air Quality");
   const [data, setData] = useState(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("userMapData"));
+    const savedLocation = saved?.location || "Mumbai";
+    const savedFilter = saved?.filterType || "Air Quality";
+    const savedPollutant = saved?.pollutant || "pm2_5";
+
+    setLocation(savedLocation);
+    setFilterType(savedFilter);
+    setPollutant(savedPollutant);
+
+    fetchData(savedLocation, savedFilter, savedPollutant);
+  }, []);
+
+  const fetchData = async (city, filter, pollutantKey) => {
+    try {
+      if (!city) return;
+
+      if (filter === "Air Quality") {
+        const pollutionData = await fetchAirPollutionDataByCity(city);
+        setData({
+          type: "pollution",
+          payload: pollutionData,
+          pollutant: pollutantOptions[pollutantKey] || "N/A",
+          city,
+        });
+      } else {
+        const weatherData = await fetchWeatherData(city);
+        setData({
+          type: filter.toLowerCase(),
+          payload: weatherData,
+          city,
+        });
+      }
+    } catch (error) {
+      console.error("❌ Error fetching data:", error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setOpen(false);
 
-    const finalLat = latitude || "19.0760"; // Mumbai lat
-    const finalLon = longitude || "72.8777"; // Mumbai lon
+    const newEntry = {
+      location,
+      pollutant,
+      filterType,
+    };
 
-    setLatitude(finalLat);
-    setLongitude(finalLon);
-
-    try {
-      if (filterType === "Air Quality") {
-        const pollutionData = await fetchAirPollutionData(finalLat, finalLon);
-        setData({ type: "pollution", payload: pollutionData, pollutant: pollutantOptions[pollutant] });
-      } 
-      else if (filterType === "Heat Map") {
-        const weatherData = await fetchWeatherData(finalLat, finalLon);
-        setData({ type: "heatmap", payload: weatherData });
-      } 
-      else if (filterType === "Wind Speed") {
-        const windData = await fetchWeatherData(finalLat, finalLon);
-        setData({ type: "wind", payload: windData });
-      } 
-      else if (filterType === "Climate") {
-        const climateData = await fetchWeatherData(finalLat, finalLon);
-        setData({ type: "climate", payload: climateData });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    localStorage.setItem("userMapData", JSON.stringify(newEntry));
+    fetchData(location, filterType, pollutant);
   };
 
   return (
     <div>
       <Navbar />
-      <div className="map-wrapper">
-        <h2 className="map-title">Environment Monitoring Map</h2>
+      <div className="map-container">
+        <div className="map-header">
+          <h2>🌍 Environment Monitoring Map</h2>
+          <p>Interactive visualization of real-time environmental data.</p>
+        </div>
 
-        <h1 className="mt-4 text-sm text-white text-center">
-          Interactive data visualization based on your selection.
-        </h1>
+        <div className="map-controls">
+          <Button
+            variant="contained"
+            onClick={handleOpen}
+            startIcon={<FilterIcon />}
+            className="filter-btn"
+          >
+            Filters
+          </Button>
+        </div>
 
-        {/* Filter Button */}
-        <Button className="filter-button" onClick={handleOpen} startIcon={<FilterIcon />}>
-          Filters
-        </Button>
-
-        {/* Modal */}
+        {/* Filter Modal */}
         <Modal open={open} onClose={handleClose}>
           <Box className="filter-modal">
             <Typography className="filter-header">Apply Filters</Typography>
-
             <form onSubmit={handleSubmit}>
-              {/* Select Type of Data */}
-              <Typography variant="subtitle1" sx={{ mt: 1 }}>
-                Select Data Type:
-              </Typography>
+              <Typography>Select Data Type:</Typography>
               <Select
                 className="dropdown-select"
                 value={filterType}
@@ -101,37 +128,18 @@ function Map() {
                 ))}
               </Select>
 
-              {/* Coordinates */}
-              <Typography variant="subtitle1" sx={{ mt: 2 }}>
-                Enter Coordinates:
-              </Typography>
-              <input
-                className="input-box"
-                placeholder="Latitude"
-                value={latitude}
-                onChange={(e) => setLatitude(e.target.value)}
-              />
-              <input
-                className="input-box"
-                placeholder="Longitude"
-                value={longitude}
-                onChange={(e) => setLongitude(e.target.value)}
-              />
-
-              {/* Location (optional) */}
-              <input
-                className="input-box"
-                placeholder="Location (optional)"
+              <TextField
+                fullWidth
+                label="City Name"
+                placeholder="e.g., Mumbai"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+                sx={{ mt: 2 }}
               />
 
-              {/* Pollutant Dropdown - Only if Air Quality */}
               {filterType === "Air Quality" && (
                 <>
-                  <Typography variant="subtitle1" sx={{ mt: 2 }}>
-                    Select Pollutant:
-                  </Typography>
+                  <Typography sx={{ mt: 2 }}>Select Pollutant:</Typography>
                   <Select
                     className="dropdown-select"
                     value={pollutant}
@@ -147,16 +155,49 @@ function Map() {
                 </>
               )}
 
-              <Button type="submit" className="apply-filter-btn" fullWidth sx={{ mt: 2 }}>
+              <Button type="submit" variant="contained" sx={{ mt: 3 }} fullWidth>
                 Apply Filters
               </Button>
             </form>
           </Box>
         </Modal>
 
-        {/* Map Area */}
-        <div className="map-area">
-          <MapComponent data={data} /> {/* Passing dynamic data */}
+        {/* Map and Info */}
+        <div className="map-content">
+          <div className="map-area">
+            <MapComponent data={data} />
+          </div>
+          <div className="info-panel">
+            <h3>📊 Data Overview</h3>
+            {data?.payload ? (
+              <ul>
+                {data.payload.main && (
+                  <>
+                    <li>
+                      <Thermometer size={18} /> Temp: {data.payload.main.temp}°C
+                    </li>
+                    <li>
+                      <Sun size={18} /> Feels like: {data.payload.main.feels_like}°C
+                    </li>
+                    <li>
+                      <Wind size={18} /> Wind Speed: {data.payload.wind?.speed} m/s
+                    </li>
+                    <li>🌫 Humidity: {data.payload.main.humidity}%</li>
+                    <li>
+                      ☁️ Condition: {data.payload.weather?.[0]?.description}
+                    </li>
+                  </>
+                )}
+                {data.pollutant && (
+                  <li>
+                    🧪 Main Pollutant: <strong>{data.pollutant}</strong>
+                  </li>
+                )}
+              </ul>
+            ) : (
+              <p>No data loaded. Please apply filters.</p>
+            )}
+          </div>
         </div>
       </div>
       <Footer />
