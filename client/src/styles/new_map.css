@@ -23,7 +23,11 @@
   font-size: 24px;
   color: #007bff;
   animation: spin 2s linear infinite;
+}.wind-arrow div {
+  font-size: 20px;
+  color: blue;
 }
+
 
 @keyframes float {
   0% { transform: translateY(0px); }
