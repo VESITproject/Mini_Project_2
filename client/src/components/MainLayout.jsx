@@ -1,3 +1,4 @@
+// src/pages/MainLayout.jsx
 import { useState, useEffect } from "react";
 import AirIcon from "@mui/icons-material/Air";
 import MapComponent from "./mapComponent";
@@ -8,13 +9,17 @@ import {
   Box,
   TextField,
   IconButton,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import { fetchAirPollutionDataByCity } from "../services/pollutionService";
-import "../styles/base_ui.css";
 import { TrendingUpIcon } from "lucide-react";
 import PollutionVisualizer from "../components/PollutionVisualizer";
+import PollutionTable from "../components/PollutionTable";
 import "../styles/main.css";
 
 function MainLayout({ searchQuery, setSearchQuery }) {
@@ -23,6 +28,7 @@ function MainLayout({ searchQuery, setSearchQuery }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [filter, setFilter] = useState("all");
   const navigate = useNavigate();
 
   const defaultData = {
@@ -43,24 +49,23 @@ function MainLayout({ searchQuery, setSearchQuery }) {
 
   const handleFetchData = async (city) => {
     if (!city || city.trim().length < 3) {
-      setError("Please enter a valid city name with at least 3 characters.");
+      setError("Enter a valid city (min 3 chars).");
       return;
     }
 
     const formattedCity = city.trim().replace(/\s+/g, "+");
-
     setLoading(true);
     setError("");
 
     try {
       const data = await fetchAirPollutionDataByCity(formattedCity);
       if (!data || data.error || data.city_not_found) {
-        throw new Error(data.error || "City not found. Please enter a valid city.");
+        throw new Error(data.error || "City not found.");
       }
       setAirQualityData({ ...data, type: "pollution" });
     } catch (error) {
       console.error("Fetch error:", error.message);
-      setError(error.message || "Error fetching air pollution data. Showing default data.");
+      setError(error.message || "Error fetching data.");
       setAirQualityData(defaultData);
     } finally {
       setLoading(false);
@@ -75,81 +80,24 @@ function MainLayout({ searchQuery, setSearchQuery }) {
   };
 
   return (
-    <div className="main-layout flex h-screen bg-gray-100">
-      <div className="left">
-        <Typography
-          sx={{
-            background: "linear-gradient(90deg, #42a5f5 5%, #1976d2 90%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontFamily: "Roboto",
-            fontSize: "40px",
-            fontWeight: "bold",
-          }}
-        >
-          Air Vision <AirIcon sx={{ color: "#42a5f5", fontSize: 40, verticalAlign: "middle" }} />
+    <div className="main-layout flex flex-col md:flex-row h-screen">
+      <div className="left p-4 md:w-1/3 bg-gradient-to-br from-blue-500 to-blue-700 text-white">
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
+          Air Vision <AirIcon />
         </Typography>
 
-        <Typography sx={{ color: "white", fontSize: "20px", mt: 2 }}>
-          AirVision provides real-time air quality maps to help you monitor and
-          understand environmental data for healthier living.
+        <Typography variant="body1" mb={3}>
+          Real-time air quality maps to help you monitor and understand environmental data for healthier living.
         </Typography>
 
-        <div className="button_div">
-          <IconButton
-            id="search_icon"
-            onClick={() => setSearchOpen(true)}
-            color="inherit"
-            disabled={loading}
-          >
-            <SearchIcon fontSize="medium" />
+        <div className="flex items-center gap-4">
+          <IconButton onClick={() => setSearchOpen(true)} color="inherit" disabled={loading}>
+            <SearchIcon />
           </IconButton>
 
-          <Modal open={searchOpen} onClose={() => setSearchOpen(false)}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                boxShadow: 24,
-                p: 4,
-                borderRadius: "10px",
-              }}
-            >
-              <Typography variant="h6" sx={{ mb: 2 }}>Enter Location</Typography>
-              <form onSubmit={handleSubmit}>
-                <TextField
-                  fullWidth
-                  placeholder="Enter city name"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  required
-                  disabled={loading}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  sx={{ mt: 3 }}
-                  disabled={loading}
-                >
-                  {loading ? "Searching..." : "Search"}
-                </Button>
-              </form>
-              {error && <Typography sx={{ color: "red", marginTop: 2 }}>{error}</Typography>}
-            </Box>
-          </Modal>
-        </div>
-
-        <div className="button_div">
           <Button
             variant="contained"
-            className="m-3 p-3 w-50 text-center"
-            color="primary"
+            color="secondary"
             onClick={() => navigate("/dashboard")}
             startIcon={<TrendingUpIcon />}
             disabled={loading}
@@ -157,19 +105,60 @@ function MainLayout({ searchQuery, setSearchQuery }) {
             Trends
           </Button>
         </div>
+
+        <FormControl fullWidth sx={{ mt: 4 }}>
+          <InputLabel>Map Filter</InputLabel>
+          <Select value={filter} onChange={(e) => setFilter(e.target.value)} label="Map Filter">
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="heat">Heatmap</MenuItem>
+            <MenuItem value="wind">Wind Flow</MenuItem>
+          </Select>
+        </FormControl>
+
+        <PollutionVisualizer data={airQualityData || defaultData} />
+
+        {loading && (
+          <Typography mt={2} textAlign="center" color="white">
+            Loading...
+          </Typography>
+        )}
       </div>
 
-      <div className="right d-flex">
-        <MapComponent data={airQualityData || defaultData} />
-        <div className="bg-black right_bar border-r-emerald-50 m-3 rounded p-3">
-          <PollutionVisualizer data={airQualityData || defaultData} />
-          {loading && (
-            <Typography sx={{ color: "white", textAlign: "center" }}>
-              Loading...
-            </Typography>
-          )}
-        </div>
+      <div className="right w-full md:w-2/3 p-2">
+        <MapComponent data={airQualityData || defaultData} filter={filter} />
+        <PollutionTable data={airQualityData || defaultData} />
       </div>
+
+      {/* Modal */}
+      <Modal open={searchOpen} onClose={() => setSearchOpen(false)}>
+        <Box sx={{
+          position: "absolute", top: "50%", left: "50%",
+          transform: "translate(-50%, -50%)",
+          bgcolor: "background.paper", boxShadow: 24, p: 4, borderRadius: "10px", width: 400,
+        }}>
+          <Typography variant="h6" gutterBottom>Enter Location</Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              placeholder="Enter city name"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              required
+              disabled={loading}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3 }}
+              disabled={loading}
+            >
+              {loading ? "Searching..." : "Search"}
+            </Button>
+          </form>
+          {error && <Typography color="error" mt={2}>{error}</Typography>}
+        </Box>
+      </Modal>
     </div>
   );
 }

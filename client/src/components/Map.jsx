@@ -31,6 +31,7 @@ function Map() {
   const [open, setOpen] = useState(false);
   const [location, setLocation] = useState("Mumbai");
   const [pollutant, setPollutant] = useState("pm2_5");
+  const [coordinates, setCoordinates] = useState(null);
   const [filterType, setFilterType] = useState("Air Quality");
   const [data, setData] = useState(null);
 
@@ -49,31 +50,36 @@ function Map() {
 
     fetchData(savedLocation, savedFilter, savedPollutant);
   }, []);
+const fetchData = async (city, filter, pollutantKey) => {
+  try {
+    if (!city) return;
 
-  const fetchData = async (city, filter, pollutantKey) => {
-    try {
-      if (!city) return;
-
-      if (filter === "Air Quality") {
-        const pollutionData = await fetchAirPollutionDataByCity(city);
-        setData({
-          type: "pollution",
-          payload: pollutionData,
-          pollutant: pollutantOptions[pollutantKey] || "N/A",
-          city,
-        });
-      } else {
-        const weatherData = await fetchWeatherData(city);
-        setData({
-          type: filter.toLowerCase(),
-          payload: weatherData,
-          city,
-        });
-      }
-    } catch (error) {
-      console.error("❌ Error fetching data:", error);
+    if (filter === "Air Quality") {
+      const pollutionData = await fetchAirPollutionDataByCity(city);
+      const coords = pollutionData.coord || pollutionData.location?.coordinates;
+      setData({
+        type: "pollution",
+        payload: pollutionData,
+        pollutant: pollutantOptions[pollutantKey] || "N/A",
+        city,
+      });
+      setCoordinates(coords);
+      setLocation(city);
+    } else {
+      const weatherData = await fetchWeatherData(city);
+      setData({
+        type: filter.toLowerCase(),
+        payload: weatherData,
+        city,
+      });
+      setCoordinates(weatherData.coord); // ✅
+      setLocation(city);
     }
-  };
+  } catch (error) {
+    console.error("❌ Error fetching data:", error);
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -137,23 +143,7 @@ function Map() {
                 sx={{ mt: 2 }}
               />
 
-              {filterType === "Air Quality" && (
-                <>
-                  <Typography sx={{ mt: 2 }}>Select Pollutant:</Typography>
-                  <Select
-                    className="dropdown-select"
-                    value={pollutant}
-                    onChange={(e) => setPollutant(e.target.value)}
-                    fullWidth
-                  >
-                    {Object.entries(pollutantOptions).map(([key, value]) => (
-                      <MenuItem key={key} value={key}>
-                        {value}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </>
-              )}
+             
 
               <Button type="submit" variant="contained" sx={{ mt: 3 }} fullWidth>
                 Apply Filters

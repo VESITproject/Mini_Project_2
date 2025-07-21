@@ -1,6 +1,6 @@
 // routes/authRoute.js
 import express from "express";
-import { registerUser, loginUser, homeRoute } from "../controller/auth_cont.js";
+import { registerUser, loginUser, homeRoute } from "../controllers/auth_cont.js";
 // import axios from "axios";
 import dotenv from "dotenv";
 // import authenticateJWT from "../middleware/auth.js";  // Correct import for authenticateJWT
@@ -17,8 +17,8 @@ const authRoute = express.Router();
 // API keys
 // const OPENCAGE_API_KEY = "15c46155180c41e695d6da3e683b9625";
 // const AIRVISUAL_API_KEY = "ad07463a0d6095307a9e826970fdd56a";
-// const OPEN'WEATHERMAP_API_KEY = "95a4a6cb3d4959918f44e4b88b2b0bf4";
-const AQCI = "a109ea80ea15e3002eeb17f1902cf61eb9b61451"
+const OPENWEATHERMAP_API_KEY = "95a4a6cb3d4959918f44e4b88b2b0bf4";
+// const AQCI = "a109ea80ea15e3002eeb17f1902cf61eb9b61451"
 // Routes
 authRoute.post("/register", registerUser);
 authRoute.post("/", loginUser);
