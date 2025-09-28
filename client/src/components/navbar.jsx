@@ -20,7 +20,7 @@ import {
 
 import Logo from "/Images/favi.png";
 
-const pages = ["Maps", "About"];
+const pages = ["Environment", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = ({ location, setLocation, setAirQualityData }) => {

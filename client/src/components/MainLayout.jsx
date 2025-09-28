@@ -1,7 +1,5 @@
-// src/pages/MainLayout.jsx
 import { useState, useEffect } from "react";
 import AirIcon from "@mui/icons-material/Air";
-import MapComponent from "./mapComponent";
 import {
   Typography,
   Button,
@@ -13,13 +11,17 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Card,
+  CardContent,
+  CardActions,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import { fetchAirPollutionDataByCity } from "../services/pollutionService";
-import { TrendingUpIcon } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import PollutionVisualizer from "../components/PollutionVisualizer";
 import PollutionTable from "../components/PollutionTable";
+// import Navbar from "../components/Navbar"; // Assuming Navbar is here
 import "../styles/main.css";
 
 function MainLayout({ searchQuery, setSearchQuery }) {
@@ -80,83 +82,101 @@ function MainLayout({ searchQuery, setSearchQuery }) {
   };
 
   return (
-    <div className="main-layout flex flex-col md:flex-row h-screen">
-      <div className="left p-4 md:w-1/3 bg-gradient-to-br from-blue-500 to-blue-700 text-white">
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
-          Air Vision <AirIcon />
-        </Typography>
+    <div className="landing-page">
+      {/* <Navbar /> */}
 
-        <Typography variant="body1" mb={3}>
-          Real-time air quality maps to help you monitor and understand environmental data for healthier living.
-        </Typography>
+      <main className="landing-main">
+        <section className="landing-info-card">
+          <Card className="info-card" elevation={6}>
+            <CardContent>
+              <Typography variant="h4" component="h1" className="title" gutterBottom>
+                Air Vision <AirIcon fontSize="large" className="icon" />
+              </Typography>
+              <Typography variant="body1" className="subtitle" paragraph>
+                Real-time air quality insights to help you breathe better and live healthier.
+              </Typography>
 
-        <div className="flex items-center gap-4">
-          <IconButton onClick={() => setSearchOpen(true)} color="inherit" disabled={loading}>
-            <SearchIcon />
-          </IconButton>
+              <div className="search-actions">
+                <IconButton
+                  aria-label="open search"
+                  color="primary"
+                  onClick={() => setSearchOpen(true)}
+                  disabled={loading}
+                  size="large"
+                >
+                  <SearchIcon />
+                </IconButton>
 
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => navigate("/dashboard")}
-            startIcon={<TrendingUpIcon />}
-            disabled={loading}
-          >
-            Trends
-          </Button>
-        </div>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<TrendingUp />}
+                  onClick={() => navigate("/dashboard")}
+                  disabled={loading}
+                >
+                  Trends
+                </Button>
+              </div>
 
-        <FormControl fullWidth sx={{ mt: 4 }}>
-          <InputLabel>Map Filter</InputLabel>
-          <Select value={filter} onChange={(e) => setFilter(e.target.value)} label="Map Filter">
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="heat">Heatmap</MenuItem>
-            <MenuItem value="wind">Wind Flow</MenuItem>
-          </Select>
-        </FormControl>
+              <FormControl fullWidth sx={{ mt: 3 }}>
+                <InputLabel id="filter-label">Data Filter</InputLabel>
+                <Select
+                  labelId="filter-label"
+                  value={filter}
+                  label="Data Filter"
+                  onChange={(e) => setFilter(e.target.value)}
+                >
+                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value="heat">Heatmap</MenuItem>
+                  <MenuItem value="wind">Wind Flow</MenuItem>
+                </Select>
+              </FormControl>
+            </CardContent>
+            <CardActions>
+              {loading && (
+                <Typography variant="body2" color="textSecondary" className="loading-text">
+                  Loading data...
+                </Typography>
+              )}
+              {error && (
+                <Typography variant="body2" color="error" className="error-text">
+                  {error}
+                </Typography>
+              )}
+            </CardActions>
+          </Card>
 
-        <PollutionVisualizer data={airQualityData || defaultData} />
+          <PollutionVisualizer data={airQualityData || defaultData} />
+        </section>
 
-        {loading && (
-          <Typography mt={2} textAlign="center" color="white">
-            Loading...
+        <section className="landing-table-card">
+          <PollutionTable data={airQualityData || defaultData} />
+        </section>
+      </main>
+
+      {/* Search Modal */}
+      <Modal open={searchOpen} onClose={() => setSearchOpen(false)} aria-labelledby="search-city-modal">
+        <Box className="modal-box" component="form" onSubmit={handleSubmit}>
+          <Typography variant="h6" id="search-city-modal" gutterBottom>
+            Enter City Name
           </Typography>
-        )}
-      </div>
-
-      <div className="right w-full md:w-2/3 p-2">
-        <MapComponent data={airQualityData || defaultData} filter={filter} />
-        <PollutionTable data={airQualityData || defaultData} />
-      </div>
-
-      {/* Modal */}
-      <Modal open={searchOpen} onClose={() => setSearchOpen(false)}>
-        <Box sx={{
-          position: "absolute", top: "50%", left: "50%",
-          transform: "translate(-50%, -50%)",
-          bgcolor: "background.paper", boxShadow: 24, p: 4, borderRadius: "10px", width: 400,
-        }}>
-          <Typography variant="h6" gutterBottom>Enter Location</Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              placeholder="Enter city name"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              required
-              disabled={loading}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3 }}
-              disabled={loading}
-            >
-              {loading ? "Searching..." : "Search"}
-            </Button>
-          </form>
-          {error && <Typography color="error" mt={2}>{error}</Typography>}
+          <TextField
+            fullWidth
+            placeholder="City name"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            required
+            disabled={loading}
+            autoFocus
+          />
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }} disabled={loading}>
+            {loading ? "Searching..." : "Search"}
+          </Button>
+          {error && (
+            <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+              {error}
+            </Typography>
+          )}
         </Box>
       </Modal>
     </div>

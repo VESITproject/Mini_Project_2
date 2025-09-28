@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'; // Use createRoot from react-dom/client
 import App from './App.jsx';
-import  "./Styles/main.css"
+import  "./Styles/home.css"
 import 'leaflet/dist/leaflet.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

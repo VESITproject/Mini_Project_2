@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
-
-import MainLayout from "../components/MainLayout";
+import Footer from "../components/footer";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "../services/helper";
 import axios from "axios";
-import Footer from "../components/footer";
-
+import { Box, Typography, Card, CardContent, Avatar } from "@mui/material";
+import "../styles/home.css";
+import Features from "../components/Feature";
 const Home = () => {
   const { id } = useParams();
   const [userData, setUserData] = useState({ name: "", email: "" });
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); 
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -44,21 +43,42 @@ const Home = () => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading-screen">Loading...</div>;
   }
 
   return (
-    <div>
-      <header className="w-full">
-        {userData.name && <Navbar onSearch={setSearchQuery} Avatar={userData.name} />}
+    <div className="home-container">
+      <header className="home-header">
+        {userData.name && <Navbar Avatar={userData.name} />}
       </header>
 
-      {/* Pass searchQuery to MainLayout */}
-      <div className="flex flex-grow w-100 bg-customBlue">
-      <MainLayout searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      </div>
-
-      <Footer />
+      <main className="home-main">
+        <Card elevation={8} className="welcome-card">
+          <CardContent>
+            <Box className="welcome-avatar">
+              <Avatar sx={{ bgcolor: "#1976d2", width: 64, height: 64, fontSize: 32 }}>
+                {userData.name.charAt(0).toUpperCase()}
+              </Avatar>
+            </Box>
+            <Typography variant="h4" gutterBottom className="welcome-title">
+              Welcome, {userData.name}!
+            </Typography>
+            <Typography variant="h6" className="project-title" gutterBottom>
+              AirVision
+            </Typography>
+            <Typography variant="body1" className="project-description" paragraph>
+              Empowering you with <strong>real-time air quality mapping</strong> for a healthier environment.
+            </Typography>
+            <Typography variant="body2" className="project-tagline">
+              Breathe better. Live smarter.
+            </Typography>
+          </CardContent>
+        </Card>
+      </main>
+    <Features />
+      <footer className="home-footer">
+        <Footer />
+      </footer>
     </div>
   );
 };

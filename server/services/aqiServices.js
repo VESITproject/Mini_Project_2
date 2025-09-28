@@ -74,7 +74,7 @@ export const fetchAQIHistoricalData = async (days , { location, latitude, longit
     console.log(`Latitude: ${coordinates.lat}, Longitude: ${coordinates.lon}`);
     console.log(`Date Range:${days} ${start} to ${end}`);
 
-    const response = await axios.get("http://api.openweathermap.org/data/2.5/air_pollution/history", {
+    const response = await axios.get("https://api.openweathermap.org/data/2.5/air_pollution/history", {
       params: {
         lat: coordinates.lat,
         lon: coordinates.lon,

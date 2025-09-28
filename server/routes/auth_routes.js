@@ -1,6 +1,6 @@
 // routes/authRoute.js
 import express from "express";
-import { registerUser, loginUser, homeRoute } from "../controllers/auth_cont.js";
+import { registerUser, loginUser, homeRoute } from "../controller/auth_cont.js";
 // import axios from "axios";
 import dotenv from "dotenv";
 // import authenticateJWT from "../middleware/auth.js";  // Correct import for authenticateJWT

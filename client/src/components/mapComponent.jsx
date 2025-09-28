@@ -29,6 +29,7 @@ import {
   Typography,
   Fade,
 } from "@mui/material";
+import { HeatmapLayer } from "react-leaflet-heatmap-layer-v3";
 
 import AirIcon from "@mui/icons-material/Air";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
@@ -148,95 +149,22 @@ const MapComponent = ({ data , filter}) => {
   const lat = parseFloat(data?.lat || defaultPosition.lat);
   const lon = parseFloat(data?.lon || defaultPosition.lon);
   const weather = data?.payload;
+// Sample points for heatmap [lat, lon, intensity]
+const heatmapPoints = [
+  [lat, lon, weather?.main?.temp || 20], // center point
+  [lat + 0.05, lon + 0.03, 28],
+  [lat - 0.04, lon - 0.02, 30],
+  [lat + 0.02, lon - 0.04, 22],
+];
 
   return (
     <Box>
-      <MapContainer center={[lat, lon]} zoom={10} className="leaflet-map">
-        <RecenterMap lat={lat} lon={lon} />
-        <LayersControl position="topright">
-          <BaseLayer checked name="OpenStreetMap">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="© OpenStreetMap contributors"
-            />
-          </BaseLayer>
-
-          <BaseLayer name="Topographic Map">
-            <TileLayer
-              url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
-              attribution="© OpenTopoMap"
-            />
-          </BaseLayer>
-
-          <Overlay name="Air Quality (AQICN)">
-            <TileLayer
-              url="https://tiles.aqicn.org/tiles/usepa-aqi/{z}/{x}/{y}.png?token=a109ea80ea15e3002eeb17f1902cf61eb9b61451"
-              attribution="© AQICN.org"
-              opacity={0.5}
-            />
-          </Overlay>
-
-          <Overlay checked name="📍 Location Marker">
-            <Marker position={[lat, lon]} icon={defaultPinIcon}>
-              <Popup>📍 Location: {data?.city || "Selected Point"}</Popup>
-            </Marker>
-          </Overlay>
-
-       {filter === 'heatmap' && weather?.main?.temp && (
-  <Overlay checked name="🔥 Heat Circle">
-    <Circle
-      center={[lat, lon]}
-      radius={3000}
-      pathOptions={{
-        color: getHeatColor(weather.main.temp),
-        fillOpacity: 0.5,
-      }}
-    >
-      <Popup>
-        🌡 Temp: {weather.main.temp}°C<br />
-        ☀️ Feels Like: {weather.main.feels_like}°C
-      </Popup>
-    </Circle>
-  </Overlay>
-)}
-
-{filter === 'wind' && weather?.wind?.speed && (
-  <Overlay checked name="💨 Wind Direction">
-    <>
-      <Marker position={[lat, lon]} icon={arrowIcon(weather.wind.deg)}>
-        <Popup>
-          💨 Speed: {weather.wind.speed} m/s<br />
-          ↗️ Direction: {weather.wind.deg}°
-        </Popup>
-      </Marker>
-      <Polyline
-        positions={[
-          [lat, lon],
-          [
-            lat + 0.05 * Math.cos((weather.wind.deg * Math.PI) / 180),
-            lon + 0.05 * Math.sin((weather.wind.deg * Math.PI) / 180),
-          ],
-        ]}
-        pathOptions={{ color: "blue", dashArray: "5, 10" }}
-      />
-    </>
-  </Overlay>
-)}
-
-
-          {data?.type === "climate" && (
-            <Overlay checked name="🌥 Weather Info">
-              <Marker position={[lat, lon]}>
-                <Popup>
-                  🌥️ {weather.weather?.[0]?.description}<br />
-                  🌡️ {weather.main?.temp}°C<br />
-                  💧 {weather.main?.humidity}%
-                </Popup>
-              </Marker>
-            </Overlay>
-          )}
-        </LayersControl>
-      </MapContainer>
+     <MapContainer center={[19.07283, 72.88261]} zoom={10} className="leaflet-map">
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    attribution="© OpenStreetMap contributors"
+  />
+</MapContainer>
 
       {/* 🌤 Table below map */}
       <WeatherTable weather={weather} />
