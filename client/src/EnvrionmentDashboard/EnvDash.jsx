@@ -12,19 +12,38 @@ import { fetchAirPollutionDataByCity } from '../services/pollutionService';
 import '../styles/App.css';
 import Navbar from '../components/navbar';
 
-const theme = createTheme({
+// FIX: Replaced the light theme with a new darkTheme configuration.
+const darkTheme = createTheme({
   palette: {
-    primary: { main: '#2980b9', light: '#3498db', dark: '#1f4e79' },
-    secondary: { main: '#27ae60', light: '#2ecc71', dark: '#1e8449' },
-    background: { default: '#f8f9fa', paper: '#ffffff' },
-    text: { primary: '#2c3e50', secondary: '#7f8c8d' },
+    mode: 'dark',
+    primary: { main: '#64b5f6', light: '#9be7ff', dark: '#2286c3' },
+    secondary: { main: '#f48fb1', light: '#ffc1e3', dark: '#bf5f82' },
+    background: { default: '#121212', paper: '#1e1e1e' },
+    text: { primary: '#e0e0e0', secondary: '#b0bec5' },
   },
   typography: {
     fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    h4: { fontWeight: 600, color: '#2c3e50' },
+    h4: { fontWeight: 600 },
     h6: { fontWeight: 500 },
   },
   shape: { borderRadius: 12 },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none', // Important for dark mode cards
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+        },
+      },
+    },
+     MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#1e1e1e', // Match paper background
+        }
+      }
+    }
+  }
 });
 
 function EnvDash() {
@@ -51,7 +70,6 @@ function EnvDash() {
 
         // Consolidate relevant data
         const consolidatedData = {
-          // FIX: Added lat and lon for the map component
           lat: weather.coord?.lat,
           lon: weather.coord?.lon,
           temperature: weather.main?.temp,
@@ -59,18 +77,18 @@ function EnvDash() {
           humidity: weather.main?.humidity,
           pressure: weather.main?.pressure,
           windSpeed: weather.wind?.speed,
-          uvIndex: Math.floor(Math.random() * 11), // You can replace with a real UV API later
+          uvIndex: Math.floor(Math.random() * 11),
           condition: weather.weather?.[0]?.description,
           aqi: pollution?.list?.[0]?.main?.aqi || null,
           airQuality: mapAQIToLabel(pollution?.list?.[0]?.main?.aqi),
           pollutants: pollution?.list?.[0]?.components || {},
-          visibility: weather.visibility ? weather.visibility / 1000 : null, // meters to km
+          visibility: weather.visibility ? weather.visibility / 1000 : null,
         };
 
         setCurrentWeatherData(consolidatedData);
       } catch (err) {
         setError('Failed to fetch weather/pollution data.');
-        console.error(err); // It's good practice to log the actual error
+        console.error(err);
         setCurrentWeatherData(null);
       } finally {
         setLoading(false);
@@ -112,10 +130,11 @@ function EnvDash() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    // FIX: Passed the new darkTheme to the ThemeProvider
+    <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Navbar />
-      <Box sx={{ display: 'flex', height: '100vh', bgcolor: 'background.default' }}>
+      <Box sx={{ display: 'flex', height: 'calc(100vh - 64px)', bgcolor: 'background.default' }}>
         <EnvSideBar
           currentCity={currentCity}
           currentDataType={currentDataType}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback  } from 'react';
 import {
   Box, Typography, Card, CardContent,
   IconButton, Chip, Button, CircularProgress
@@ -6,7 +6,7 @@ import {
 import {
   LocationOn, FilterAlt, Refresh
 } from '@mui/icons-material';
-
+import { useNavigate  } from 'react-router-dom';
 // FIX #1: Created a new, specific function for the 1-5 AQI scale from your API
 const getAqiInfoFromScale = (aqi) => {
   if (aqi === null || aqi === undefined || isNaN(aqi)) {
@@ -30,8 +30,8 @@ function EnvSideBar({
 }) {
   const [localAqiData, setLocalAqiData] = useState(null);
   const [isAqiLoading, setIsAqiLoading] = useState(false);
-
-  const fetchSidebarAQI = useCallback(async (location) => {
+  const navigate = useNavigate();
+    const fetchSidebarAQI = useCallback(async (location) => {
     if (!location) return;
     setIsAqiLoading(true);
     try {
@@ -136,6 +136,8 @@ function EnvSideBar({
                 <Typography variant="h6" sx={{ color: aqiInfo.color, mt: 0.5 }}>
                   AQI {isAqiLoading ? '...' : finalAqiValue ?? '--'}
                 </Typography>
+
+                <Button color='primary' variant='contained'  onClick={(()=> navigate('/dashboard'))} sx={{margin:"10px 50px"   , width:"50%"}}>AQI Dashboard</Button>
               </CardContent>
             </Card>
           </Box>
