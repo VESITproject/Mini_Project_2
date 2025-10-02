@@ -85,18 +85,18 @@ function EnvSideBar({
           <Card sx={{ bgcolor: 'primary.light', color: 'white' }}>
             <CardContent sx={{ pb: '16px !important' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <LocationOn sx={{ mr: 1 }} />
-                <Typography variant="h6">{currentCity || 'Unknown Location'}</Typography>
-                <IconButton size="small" sx={{ ml: 'auto', color: 'white' }} onClick={onOpenModal}>
+                <LocationOn sx={{ mr: 1 , color:"black" }} />
+                <Typography variant="h6" color='black'>{currentCity || 'Unknown Location'}</Typography>
+                <IconButton size="small" sx={{ ml: 'auto', color: 'black' }} onClick={onOpenModal}>
                   <FilterAlt />
                 </IconButton>
               </Box>
               {currentWeatherData ? (
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 300, mb: 1 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 300, mb: 1 , color:"black" }}>
                     {currentWeatherData.temperature?.toFixed(1) ?? '--'}°C
                   </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9, textTransform: 'capitalize' }}>
+                  <Typography variant="body2" sx={{ opacity: 0.9, textTransform: 'capitalize' , color:"black" }}>
                     {currentWeatherData.condition || 'N/A'}
                   </Typography>
                 </Box>
@@ -114,7 +114,7 @@ function EnvSideBar({
             </Box>
 
             {/* AQI CARD */}
-            <Card sx={{ mt: 1, bgcolor: 'background.default' }}>
+            <Card sx={{ mt: 1, bgcolor: 'background.default' , }}>
               <CardContent sx={{ p: 1.5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color="text.secondary">Air Quality</Typography>
