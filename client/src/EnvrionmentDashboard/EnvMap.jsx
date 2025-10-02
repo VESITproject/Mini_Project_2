@@ -1,3 +1,5 @@
+// src/EnvrionmentDashboard/EnvMap.js
+
 import React, { useEffect } from 'react';
 import {
   MapContainer,
@@ -27,9 +29,11 @@ const defaultPinIcon = new L.Icon({
   popupAnchor: [1, -34],
 });
 
-function EnvMap({ data, filter , currentCity }) {
-  const lat = parseFloat(data?.lat) || 19.07283;
-  const lon = parseFloat(data?.lon) || 72.88261;
+// FIX: Removed unused 'filter' prop
+function EnvMap({ data, currentCity }) {
+  // Now `data.lat` and `data.lon` will be correctly passed from the parent state
+  const lat = parseFloat(data?.lat) || 19.07283; // Default to Mumbai
+  const lon = parseFloat(data?.lon) || 72.88261; // Default to Mumbai
 
   // Show tooltip on layer labels (title attribute)
   const renderLayersControl = () => (
@@ -56,7 +60,7 @@ function EnvMap({ data, filter , currentCity }) {
   );
 
   return (
-    <MapContainer center={[lat, lon]} zoom={10} style={{ height: '50vh', width: '100%' }}>
+    <MapContainer center={[lat, lon]} zoom={10} style={{ height: '350px', width: '100%' }}>
       <RecenterMap lat={lat} lon={lon} />
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       {renderLayersControl()}

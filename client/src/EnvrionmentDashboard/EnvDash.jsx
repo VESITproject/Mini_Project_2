@@ -1,3 +1,5 @@
+// src/EnvDash.js
+
 import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,6 +11,7 @@ import { fetchWeatherData } from '../services/weatherService';
 import { fetchAirPollutionDataByCity } from '../services/pollutionService';
 import '../styles/App.css';
 import Navbar from '../components/navbar';
+
 const theme = createTheme({
   palette: {
     primary: { main: '#2980b9', light: '#3498db', dark: '#1f4e79' },
@@ -48,6 +51,9 @@ function EnvDash() {
 
         // Consolidate relevant data
         const consolidatedData = {
+          // FIX: Added lat and lon for the map component
+          lat: weather.coord?.lat,
+          lon: weather.coord?.lon,
           temperature: weather.main?.temp,
           feelsLike: weather.main?.feels_like,
           humidity: weather.main?.humidity,
@@ -64,6 +70,7 @@ function EnvDash() {
         setCurrentWeatherData(consolidatedData);
       } catch (err) {
         setError('Failed to fetch weather/pollution data.');
+        console.error(err); // It's good practice to log the actual error
         setCurrentWeatherData(null);
       } finally {
         setLoading(false);
@@ -112,7 +119,7 @@ function EnvDash() {
         <EnvSideBar
           currentCity={currentCity}
           currentDataType={currentDataType}
-          weatherData={currentWeatherData}
+          currentWeatherData={currentWeatherData}
           favorites={favorites}
           recentSearches={recentSearches}
           onCitySelect={setCurrentCity}

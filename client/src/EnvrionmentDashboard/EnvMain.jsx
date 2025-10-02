@@ -1,14 +1,17 @@
+// src/EnvrionmentDashboard/EnvMain.js
+
 import React from 'react';
 import {
-  Box, Typography, Grid, Card, CardContent, AppBar, Toolbar, IconButton, Chip, LinearProgress
+  Box, Typography, Grid, Card, CardContent, AppBar, Toolbar, Chip, LinearProgress, CircularProgress
 } from '@mui/material';
 import {
-  Refresh, CloudDownload, Brightness4, Notifications, Thermostat, Air, Visibility, Opacity, Speed, WbSunny
+  Thermostat, Air, Visibility, Opacity, Speed, WbSunny
 } from '@mui/icons-material';
 import MapComponent from '../EnvrionmentDashboard/EnvMap';
 import WeatherChart from '../EnvrionmentDashboard/EnvWeatherChart';
 
-function EnvMain({ currentCity, currentDataType, weatherData }) {
+// FIX: Updated function signature to accept loading/error and remove unused 'data' prop
+function EnvMain({ currentCity, currentDataType, weatherData, loading, error }) {
   const getUVIndexColor = (uvIndex) => {
     if (uvIndex <= 2) return '#27ae60';
     if (uvIndex <= 5) return '#f39c12';
@@ -25,6 +28,24 @@ function EnvMain({ currentCity, currentDataType, weatherData }) {
     return 'Extreme';
   };
 
+  // FIX: Added loading state UI
+  if (loading) {
+    return (
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  // FIX: Added error state UI
+  if (error) {
+    return (
+      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', p: 3 }}>
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Top App Bar */}
@@ -33,15 +54,11 @@ function EnvMain({ currentCity, currentDataType, weatherData }) {
           <Typography variant="h6" sx={{ flex: 1 }}>
             {currentCity || 'Unknown City'} - {currentDataType ? currentDataType.replace(/([A-Z])/g, ' $1').trim() : 'Loading...'}
           </Typography>
-          <IconButton color="inherit"><Notifications /></IconButton>
-          <IconButton color="inherit"><CloudDownload /></IconButton>
-          <IconButton color="inherit"><Brightness4 /></IconButton>
-          <IconButton color="inherit"><Refresh /></IconButton>
         </Toolbar>
       </AppBar>
 
       {/* Weather Alert Banner */}
-      {weatherData && weatherData.aqi > 100 && (
+      {weatherData && weatherData.aqi > 3 && ( // Assuming AQI scale is 1-5
         <Box sx={{ bgcolor: 'warning.light', p: 1 }}>
           <Typography variant="body2" color="warning.contrastText" align="center">
             ⚠️ Air Quality Alert: Current AQI is {weatherData.aqi} - Consider limiting outdoor activities
@@ -66,7 +83,8 @@ function EnvMain({ currentCity, currentDataType, weatherData }) {
                         <Chip label={currentDataType} color="primary" size="small" />
                       </Box>
                     </Box>
-                    <MapComponent currentCity={currentCity} dataType={currentDataType} />
+                    {/* FIX: Passed the correct 'weatherData' prop to the map */}
+                    <MapComponent currentCity={currentCity} dataType={currentDataType} data={weatherData} />
                   </CardContent>
                 </Card>
               </Grid>
@@ -182,38 +200,31 @@ function EnvMain({ currentCity, currentDataType, weatherData }) {
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6" sx={{ mb: 3 }}>
-                      Air Quality Breakdown
-                    </Typography>
-                    <Grid container spacing={2}>
-                     {/* Air Quality Breakdown */}
-{weatherData && weatherData.pollutants && Object.keys(weatherData.pollutants).length > 0 ? (
-  <Box sx={{ px: 2, mb: 2 }}>
-    <Typography variant="h6" sx={{ mb: 1, px: 1 }}>Air Quality Breakdown</Typography>
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, px: 1 }}>
-      {Object.entries(weatherData.pollutants).map(([pollutant, value]) => (
-        <Card 
-          key={pollutant} 
-          sx={{ minWidth: 60, flex: '1 0 30%', p: 1, textAlign: 'center' }} 
-          variant="outlined"
-        >
-          <Typography variant="h5" color="primary" sx={{ fontWeight: 600 }}>
-            {typeof value === 'number' ? value.toFixed(2) : value}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {pollutant.toUpperCase()}
-          </Typography>
-        </Card>
-      ))}
-    </Box>
-  </Box>
-) : (
-  <Typography sx={{ px: 2, mb: 2 }} color="text.secondary" variant="body2">
-    No air quality breakdown data available.
-  </Typography>
-)}
-
-                    </Grid>
+                    {weatherData && weatherData.pollutants && Object.keys(weatherData.pollutants).length > 0 ? (
+                      <Box>
+                        <Typography variant="h6" sx={{ mb: 2 }}>Air Quality Breakdown</Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+                          {Object.entries(weatherData.pollutants).map(([pollutant, value]) => (
+                            <Card
+                              key={pollutant}
+                              sx={{ flex: '1 1 100px', p: 1, textAlign: 'center' }}
+                              variant="outlined"
+                            >
+                              <Typography variant="h6" color="primary" sx={{ fontWeight: 600 }}>
+                                {typeof value === 'number' ? value.toFixed(2) : value}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'uppercase' }}>
+                                {pollutant.replace('_', '.')}
+                              </Typography>
+                            </Card>
+                          ))}
+                        </Box>
+                      </Box>
+                    ) : (
+                      <Typography color="text.secondary" variant="body2">
+                        No air quality breakdown data available.
+                      </Typography>
+                    )}
                   </CardContent>
                 </Card>
               </Grid>
